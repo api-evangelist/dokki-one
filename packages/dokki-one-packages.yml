@@ -1,0 +1,92 @@
+generated: '2026-09-19'
+method: searched
+source: https://github.com/Dokki-lab
+docs: https://dokki.one/pub/docs/clients
+note: >-
+  Dokki publishes NO client SDKs for its REST API on any package registry: npm, PyPI, RubyGems,
+  crates.io, Packagist and NuGet were searched on 2026-09-19 (the only npm package named `dokki` is an
+  unrelated 0.1.0 from 2020 by a different author). What the company does ship, all from the Dokki-lab
+  GitHub organization, is agent-side tooling: a Claude Code plugin and a Codex plugin that wire the
+  hosted MCP facade plus skills, two open-source Agent Skill packages (slides, charts) installed with
+  the `skills` CLI or a Claude Code marketplace, the official docs mirror, and a signed macOS desktop
+  app distributed as a direct download with published SHA-256 checksums. None of these is an API
+  client library, so no SDKs pointer is emitted. Versions come from each repository's manifest and
+  the GitHub releases/commits API; the GitHub org has no npm/PyPI presence to read a registry date from.
+packages:
+- name: dokki (Claude Code plugin)
+  language: markdown/json
+  kind: agent-plugin
+  registry: github
+  official: true
+  url: https://github.com/Dokki-lab/dokki-plugin
+  repository: https://github.com/Dokki-lab/dokki-plugin
+  install: /plugin marketplace add Dokki-lab/dokki-plugin ; /plugin install dokki@dokki-plugin
+  version: 1.1.0
+  published: '2026-07-27'
+  version_source: .claude-plugin/plugin.json; published = last commit (5d48ad9) — the repo has no releases or tags
+  license: MIT
+  contents: .mcp.json pointing at https://dokki.one/mcp/v2 + six skills (dokki, dokki-workspace, dokki-document, dokki-table, dokki-artifact, dokki-publish)
+- name: '@dokki-lab/dokki-codex-plugin (dokki-mcp)'
+  language: markdown/json
+  kind: agent-plugin
+  registry: github
+  official: true
+  url: https://github.com/Dokki-lab/dokki-codex-plugin
+  repository: https://github.com/Dokki-lab/dokki-codex-plugin
+  install: Codex App marketplace import (.agents/plugins/marketplace.json) — installation AVAILABLE, authentication ON_INSTALL (Dokki OAuth)
+  version: 0.3.0
+  published: '2026-07-29'
+  version_source: plugins/dokki-mcp/.codex-plugin/plugin.json "0.3.0+codex.20260709000000" and package.json 0.3.0 (private, not on npm); published = last commit (354ee23)
+  license: MIT
+  contents: .mcp.json pointing at https://dokki.one/mcp/v2 + seven skills (dokki-mcp, dokki-workspace, dokki-document, dokki-table, dokki-artifact, dokki-file, dokki-publish)
+- name: dokki-slides
+  language: javascript
+  kind: agent-skill + CLI (Node 18+)
+  registry: github
+  official: true
+  url: https://github.com/Dokki-lab/dokki-slides
+  repository: https://github.com/Dokki-lab/dokki-slides
+  install: npx skills add Dokki-lab/dokki-slides --skill dokki-slides
+  version: 1.1.3
+  published: '2026-09-11'
+  version_source: package.json 1.1.3 and git tag v1.1.3 (latest GitHub Release object is v1.1.1, 2026-08-21); published = last commit on main (964762e). plugin.json declares 2.0.0 for the Claude Code plugin wrapper and SKILL.md metadata.version is 2.0.0 (protocol dokki-slides@2) — the npm-style package version and the skill version diverge by design.
+  npm: not published (registry.npmjs.org/dokki-slides -> 404 on 2026-09-19)
+  license: MIT-0
+  binary: dokki-slides (scripts/dokki-slides.mjs — init, layouts, check, package)
+- name: dokki-charts
+  language: javascript
+  kind: agent-skill + CLI (Node 18+)
+  registry: github
+  official: true
+  url: https://github.com/Dokki-lab/dokki-charts
+  repository: https://github.com/Dokki-lab/dokki-charts
+  install: npx skills add Dokki-lab/dokki-charts --skill dokki-charts  (or /plugin marketplace add Dokki-lab/dokki-charts ; /plugin install dokki-charts@dokki-skills)
+  version: 1.0.0
+  published: '2026-08-18'
+  version_source: package.json 1.0.0, GitHub Release v1.0.0 published 2026-08-18T15:24:05Z
+  npm: not published (registry.npmjs.org/dokki-charts -> 404 on 2026-09-19)
+  license: MIT-0
+  binary: dokki-charts (skill/scripts/dokki-charts.mjs — validate, package)
+- name: Dokki Desktop for macOS
+  language: binary
+  kind: desktop-app
+  registry: direct-download
+  official: true
+  url: https://dokki.one/download
+  download: https://dokki.one/desktop/v0.3.1/DokkiDesktop-0.3.1-universal.dmg
+  checksums: https://dokki.one/desktop/v0.3.1/checksums.sha256
+  sha256: dcde7dddfa43507f49a801bc45fd841c54e2ccfc133d653f8ff9c37f71aada5a
+  version: 0.3.1
+  published: '2026-09-18'
+  version_source: https://dokki.one/download ("Version 0.3.1 · 92.7 MB", "Published 2026-09-18"); signed by Dokki and notarized by Apple; macOS 13+, universal
+  note: Pairs a Mac so Dokki agents can use local coding runtimes (Claude Code and others) in allowed folders; Windows and Linux builds "are not available yet".
+- name: Dokki-Docs
+  language: markdown
+  kind: docs-mirror
+  registry: github
+  official: true
+  url: https://github.com/Dokki-lab/Dokki-Docs
+  version: null
+  published: '2026-07-22'
+  version_source: unversioned mirror of https://dokki.one/pub/docs (generated_by Dokki); published = last commit
+sdk_count: 0

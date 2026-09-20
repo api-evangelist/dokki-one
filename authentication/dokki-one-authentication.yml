@@ -1,0 +1,95 @@
+generated: '2026-09-19'
+method: searched
+source: https://dokki.one/pub/api/authentication
+docs: https://dokki.one/pub/api/authentication
+spec: openapi/dokki-one-openapi.yml
+corroborating_sources:
+- https://dokki.one/pub/api/api-keys-and-scopes
+- https://dokki.one/pub/docs/clients
+- https://dokki.one/pub/docs/workspace-connectors
+- https://dokki.one/.well-known/oauth-authorization-server
+- https://dokki.one/.well-known/oauth-protected-resource
+summary:
+  types: [http, oauth2, openIdConnect]
+  transport: Authorization header, Bearer scheme, HTTPS only
+  note: >-
+    The REST API (https://dokki.one/api/v1) authenticates with a bearer credential — a Dokki API key
+    (dk_...), a Supabase access token, or the browser session — and authorizes through three gates
+    (token scope, tenant boundary, object permission). The MCP servers add OAuth 2.0 / OIDC with
+    discovery and dynamic client registration (RFC 8414, RFC 9728, RFC 7591) so interactive clients
+    can sign in without a key, plus workspace-scoped connector tokens for machines. The generated
+    OpenAPI models the REST side as one http bearer scheme; the OAuth side is documented here and in
+    scopes/dokki-one-scopes.yml because it is not visible from the REST reference.
+schemes:
+- name: BearerAuth
+  type: http
+  scheme: bearer
+  applies_to: REST API (/api/v1) and MCP endpoints
+  description: Authorization Bearer header carrying a dk_ API key, a Supabase bearer token, or (MCP) an OAuth access token.
+  sources: [openapi/dokki-one-openapi.yml, https://dokki.one/pub/api/authentication]
+- name: DokkiOAuth
+  type: oauth2
+  applies_to: MCP endpoints (https://dokki.one/mcp/v2, https://dokki.one/api/mcp)
+  flows:
+    authorizationCode:
+      authorizationUrl: https://schcrwqbgkcmhdltwgcz.supabase.co/auth/v1/oauth/authorize
+      tokenUrl: https://dokki.one/api/oauth/token
+      refreshUrl: https://dokki.one/api/oauth/token
+      scopes:
+        openid: OpenID Connect identity
+        profile: Profile claims (name, picture, preferred_username)
+        email: Email claims
+        phone: Phone claims
+        offline_access: Refresh tokens
+  pkce: [S256, plain]
+  dynamic_client_registration: https://schcrwqbgkcmhdltwgcz.supabase.co/auth/v1/oauth/clients/register
+  token_endpoint_auth_methods: [client_secret_basic, client_secret_post, none]
+  consent: On the consent screen the user selects any combination of Personal, one or more Organizations and specific Workspaces; the grant is the union of that selection and never exceeds the user's own permissions.
+  sources: [https://dokki.one/.well-known/oauth-authorization-server, https://dokki.one/pub/docs/clients]
+- name: DokkiOIDC
+  type: openIdConnect
+  openIdConnectUrl: https://dokki.one/.well-known/openid-configuration
+  issuer: https://dokki.one
+  id_token_signing_alg_values_supported: [RS256, HS256, ES256]
+  jwks_uri: https://schcrwqbgkcmhdltwgcz.supabase.co/auth/v1/.well-known/jwks.json
+  sources: [https://dokki.one/.well-known/openid-configuration]
+credentials:
+- id: api-key
+  header: 'Authorization: Bearer dk_...'
+  prefix: dk_
+  use: Server-to-server integrations and trusted non-interactive MCP clients
+  issued_by: Dokki account API key manager or POST /api/v1/api-keys (scope api_key:write)
+  tenant: Personal, or exactly one Org (an Org key cannot access a different Org; a Personal key cannot access Org workspaces)
+  scopes: Per-key scope list; new public keys default to read scopes (see scopes/dokki-one-scopes.yml)
+  shown_once: true
+  rotation: Create a replacement key, deploy it, verify GET /api/v1/me, then revoke the old key; record the key id, not the secret.
+- id: supabase-bearer-token
+  header: 'Authorization: Bearer <supabase_access_token>'
+  prefix: null
+  use: First-party clients acting as a signed-in user
+  issued_by: Supabase Auth (Dokki's identity provider)
+- id: browser-session
+  header: cookie session
+  use: The Dokki web app
+- id: oauth-access-token
+  header: 'Authorization: Bearer <access_token>'
+  use: Interactive MCP clients (Claude, Claude Desktop, Claude Code, Codex, Cursor, ChatGPT) after OAuth discovery + consent
+  issued_by: Dokki token endpoint https://dokki.one/api/oauth/token
+- id: workspace-connector-token
+  header: query parameters in the generated connector URL (workspace id, connector id, one-time token)
+  use: CI jobs, shared automations, dedicated agents locked to ONE workspace (Documents, Publish or Memory flavor)
+  issued_by: Workspace admins under Workspace -> Extensions -> Connectors; raw token shown once, Dokki keeps a hash and visible prefix
+  note: The client must preserve the exact connector URL and query parameters; a different workspace id or connector id is rejected.
+verify_principal:
+  endpoint: GET /api/v1/me
+  returns: [type (authentication mode), user_id, org_id (null for Personal), key_id (API keys), scopes (effective)]
+failures:
+  '401 unauthorized': missing, invalid, expired or revoked credentials
+  '403 insufficient_scope': credential valid but lacks the endpoint scope
+  '403 forbidden': scope valid but tenant or object permission denies access
+  '404': may be returned instead of 403 where revealing existence would leak information
+mcp_challenge:
+  http_status: 401
+  www_authenticate: Bearer resource_metadata="https://dokki.one/.well-known/oauth-protected-resource?resource=https%3A%2F%2Fdokki.one%2Fapi%2Fmcp"
+  body: '{"jsonrpc":"2.0","error":{"code":-32001,"message":"Unauthorized"},"id":null}'
+agent_guidance: '"Do not ask users to paste secrets into a chat. Ask them to create or authorize a key in Dokki, then store it in the host application''s secret manager."'

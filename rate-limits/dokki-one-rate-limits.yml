@@ -1,0 +1,24 @@
+generated: '2026-09-19'
+method: searched
+source: https://dokki.one/pub/api/pagination-errors-and-rate-limits
+docs: https://dokki.one/pub/api/pagination-errors-and-rate-limits
+limit_count: 0
+summary: >-
+  Dokki documents that rate limiting exists and how to behave under it, but publishes NO numeric
+  limits, windows or rate-limit response headers. The only runtime signal is the 429 status code with
+  the standard error envelope. Plan quotas (e.g. 5 AI messages/day on Free, "5x Pro's monthly AI
+  quota" on Max) are AI-usage entitlements metered in credits, not API request limits, and are
+  recorded in plans/dokki-one-plans-pricing.yml.
+rate_limits: []
+exhaustion:
+  status: 429
+  media_type: application/json
+  body_shape: '{"error":{"code":"...","message":"rate limit exceeded","request_id":"uuid"}}'
+  headers_documented: []
+  retry_after: not documented
+guidance_published:
+- Respect 429 responses and keep concurrency bounded per key, Org, and workspace.
+- Batch read operations, cache immutable metadata, and avoid polling faster than necessary.
+- Retry 408/429/5xx with exponential backoff and jitter; do not retry 400/401/403/404/422 unchanged.
+probe:
+  note: Not observed live — every /api/v1 route requires a credential, and the anonymous 401 responses carried no RateLimit-* or X-RateLimit-* headers (observed 2026-09-19 on GET /api/v1/me and /api/v1/capabilities).

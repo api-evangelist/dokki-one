@@ -1,0 +1,140 @@
+generated: '2026-09-19'
+method: probed
+status: published
+source: https://dokki.one/pub/docs/clients
+docs: https://dokki.one/pub/docs/clients
+corroborating_sources:
+- https://github.com/Dokki-lab/dokki-plugin (.mcp.json + README)
+- https://github.com/Dokki-lab/dokki-codex-plugin (plugins/dokki-mcp/.mcp.json + plugin.json)
+- https://dokki.one/.well-known/oauth-protected-resource
+- https://dokki.one/pub/docs/workspace-connectors
+summary: >-
+  Dokki operates hosted, remote MCP servers on its primary domain. The canonical endpoint is the
+  /mcp/v2 FACADE: eight high-level tools (find, read, create, edit, share, message, publish, connect)
+  plus preview_resource, each taking an `action` + top-level ids + `args`, over stateless Streamable
+  HTTP. The legacy flat server at /api/mcp exposes "~37" individual tools (names not published) and
+  per-Org paths /api/mcp/org/<orgId> remain as compatibility routes. Workspace Connectors reuse
+  /mcp/v2 (Documents flavor), /api/publish-mcp (Publish) and /api/mem-mcp (Memory) with a fixed
+  workspace id, connector id and one-time token in the generated URL. Both public endpoints return
+  401 to an anonymous tools/list, so input schemas below are the provider's published action
+  vocabulary, not introspected JSON Schema.
+deployment:
+  mode: remote
+  endpoint: https://dokki.one/mcp/v2
+  auth: oauth
+  verified: probed
+  note: >-
+    A hosted HTTPS endpoint an MCP client POSTs to directly; there is no stdio package. The docs'
+    Codex CLI snippet uses `npx -y mcp-remote https://dokki.one/mcp/v2`, which is a generic bridge to
+    this remote endpoint, not a Dokki-shipped local server. auth is oauth because OAuth discovery is
+    the documented default ("the client discovers Dokki's OAuth configuration and opens Dokki in a
+    browser"); a dk_ API key (Authorization: Bearer dk_...) and workspace-scoped connector tokens are
+    documented alternatives.
+servers:
+- id: dokki-facade
+  name: Dokki (facade)
+  endpoint: https://dokki.one/mcp/v2
+  transport: streamable-http
+  stateful: false
+  auth:
+    methods:
+    - oauth (RFC 8414 / RFC 9728 discovery; consent screen selects Personal, Organizations and Workspaces)
+    - api-key (Authorization: Bearer dk_...; scoped to Personal or one Org)
+    - workspace-connector token (query parameters in the generated URL; locked to one workspace)
+  status: live
+  probe:
+    method: POST tools/list and POST initialize
+    http_status: 401
+    body: '{"jsonrpc":"2.0","error":{"code":-32001,"message":"Unauthorized"},"id":null}'
+    www_authenticate: Bearer resource_metadata="https://dokki.one/.well-known/oauth-protected-resource?resource=https%3A%2F%2Fdokki.one%2Fapi%2Fmcp"
+    fetched: '2026-09-19'
+    note: >-
+      The resource_metadata challenge names /api/mcp as the resource even on /mcp/v2 — both endpoints
+      share one protected-resource document.
+  tool_count: 9
+  tools:
+  - name: find
+    description: List authorized workspaces, browse resources, search by meaning, grep exact text or identifiers, discover related knowledge, and list Artifact templates.
+    actions: [workspaces, resources, search, grep, related, templates]
+    read_only: true
+  - name: read
+    description: Read documents (view / outline / edit-addressing modes, pagination), tables (filters, sorting, projection, pagination, aggregation), artifacts and files.
+    actions: [doc, table, artifact, file]
+    read_only: true
+  - name: create
+    description: Create folders, documents, tables, artifacts and files; tenant-scoped credentials may also create workspaces.
+    actions: [workspace, folder, doc, table, artifact, file]
+    read_only: false
+  - name: edit
+    description: Rename, move, tag, untag or archive/delete resources; edit document nodes; change table rows, columns and cells; update Artifact source. Destructive operations return a confirm_token.
+    actions: [resource.update, resource.move, resource.tag, resource.untag, resource.delete, doc.edit, doc.rewrite, table.edit, artifact.update, artifact.patch]
+    read_only: false
+    confirmation_required: [resource.delete, table.edit with a columns.delete op]
+  - name: share
+    description: Share a resource with a user or change public access. Public-sharing changes require confirmation.
+    actions: [user, public]
+    read_only: false
+    confirmation_required: [public]
+  - name: message
+    description: List workspace Channel members and send or read Channel messages.
+    actions: [members, send, read]
+    read_only: false
+  - name: publish
+    description: Manage an authorized workspace's public site, published resources, featured content and custom domain. Publishing a resource requires confirmation.
+    actions: [site, site.create, site.update, add, remove, list, domain.*]
+    read_only: false
+    confirmation_required: [add]
+  - name: connect
+    description: List, authorize, inspect, disconnect and call supported external integrations (1000+ toolkits via Composio — GitHub, Slack, Gmail, Notion, Google Workspace, Linear, ...) through the acting user's connected accounts.
+    actions: [apps, list, authorize, disconnect, tools, call]
+    read_only: false
+  - name: preview_resource
+    description: Open a rendered inline preview for a document, table or Artifact in MCP hosts that support MCP Apps UI resources.
+    read_only: true
+  input_schema_note: >-
+    Every facade call is `<tool> { action, workspace_id?, resource_id?, parent_id?, insert_after_id?,
+    site_id?, args: {...} }`. The facade is self-teaching: calling a tool with no action lists its
+    actions, a partial action returns the subtree, missing args return a missing_args hint with an
+    example, and dangerous actions return requires_confirmation + confirm_token to re-send. Full
+    per-action JSON Schemas require an authenticated tools/list.
+- id: dokki-legacy-flat
+  name: Dokki (legacy flat tools)
+  endpoint: https://dokki.one/api/mcp
+  transport: streamable-http
+  auth:
+    methods: [oauth, api-key]
+  status: live (compatibility)
+  probe:
+    method: POST tools/list
+    http_status: 401
+    body: '{"jsonrpc":"2.0","error":{"code":-32001,"message":"Unauthorized"},"id":null}'
+    fetched: '2026-09-19'
+  tool_count: '~37 (provider statement; names not published)'
+  note: Per-Org compatibility path https://dokki.one/api/mcp/org/<orgId>. New connections should use /mcp/v2.
+- id: dokki-publish-connector
+  name: Publish workspace connector
+  endpoint: https://dokki.one/api/publish-mcp
+  transport: streamable-http
+  auth:
+    methods: [workspace-connector token]
+  status: live (connector URL only)
+  scope: Get/create/update the workspace's public site, publish/unpublish resources, list published resources, custom-domain status.
+- id: dokki-memory-connector
+  name: Memory workspace connector
+  endpoint: https://dokki.one/api/mem-mcp
+  transport: streamable-http
+  auth:
+    methods: [workspace-connector token]
+  status: live (connector URL only)
+  scope: Add, search, list and delete durable facts in one workspace's long-term memory.
+clients_documented:
+- Claude / Claude Desktop custom connector (https://dokki.one/mcp/v2)
+- 'Claude Code: claude mcp add dokki --transport http https://dokki.one/mcp/v2 (or the Dokki-lab/dokki-plugin marketplace plugin)'
+- 'Codex CLI: [mcp_servers.dokki] command="npx" args=["-y","mcp-remote","https://dokki.one/mcp/v2"]; Codex App: the dokki-mcp plugin'
+- 'Cursor: {"mcpServers":{"dokki":{"url":"https://dokki.one/mcp/v2"}}}'
+- ChatGPT (named in the Terms of Service as an MCP-compatible client)
+crosswalk: mcp/dokki-one-tool-crosswalk.yml
+mcp_apps_outbound: >-
+  The reverse direction also exists: Dokki Copilot and agents call external MCP servers ("MCP Apps",
+  Composio Tool Router) and each installed agent can carry its own MCP servers
+  (POST/GET/PATCH/DELETE /api/v1/agents/{agent_id}/mcp in the REST reference).

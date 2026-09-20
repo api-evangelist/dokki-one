@@ -1,0 +1,66 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist overlay for the Dokki API
+  version: '2026-09-19'
+  description: 'Enhancements API Evangelist layers over openapi/dokki-one-openapi.yml without mutating it: cross-links
+    to the derived artifacts, provenance, and the agent-facing runtime notes (capability discovery, scope model,
+    reversal paths).'
+extends: openapi/dokki-one-openapi.yml
+x-generated: '2026-09-19'
+x-method: generated
+actions:
+- target: $.info
+  update:
+    x-apievangelist:
+      provider: dokki-one
+      conventions: conventions/dokki-one-conventions.yml
+      errors: errors/dokki-one-problem-types.yml
+      authentication: authentication/dokki-one-authentication.yml
+      scopes: scopes/dokki-one-scopes.yml
+      lifecycle: lifecycle/dokki-one-lifecycle.yml
+      rate_limits: rate-limits/dokki-one-rate-limits.yml
+      mcp: mcp/dokki-one-mcp.yml
+      tool_crosswalk: mcp/dokki-one-tool-crosswalk.yml
+- target: $.info
+  update:
+    x-agent-notes:
+    - Call GET /api/v1/me first to confirm tenant (org_id) and effective scopes, then GET /api/v1/capabilities for
+      the live endpoint catalog; the reference says to treat that response, not this document, as the contract.
+    - Authorization is the intersection of token scope, tenant boundary and object permission; a 404 may be returned
+      instead of 403 to avoid disclosing existence.
+    - There is no server-side idempotency key. Keep your own key in the integration layer and reconcile by name/metadata
+      after a timeout; do not assume a timed-out POST was not applied.
+- target: $.paths['/resources/{resource_id}'].delete
+  update:
+    x-reversible:
+      reversal: restoreResource
+      window: 30 days (workspace trash retention, https://dokki.one/pub/docs/trash-and-restore)
+- target: $.paths['/workspaces/{workspace_id}/trash'].delete
+  update:
+    x-reversible:
+      reversal: null
+      note: 'Emptying trash is permanent: "This action is destructive and should be treated as final."'
+- target: $.paths['/resources/{resource_id}/publish'].post
+  update:
+    x-reversible:
+      reversal: unpublishResource
+      window: not stated
+- target: $.paths['/agent-runs'].post
+  update:
+    x-reversible:
+      reversal: cancelAgentRun
+      window: not stated
+- target: $.paths['/resources/{resource_id}/content'].patch
+  update:
+    x-reversible:
+      reversal: snapshots (createResourceSnapshot before the write; automatic snapshots kept 30 days, manual snapshots
+        until deleted)
+      window: 30 days for automatic snapshots (https://dokki.one/pub/docs/version-history)
+- target: $.paths['/workspaces/{workspace_id}/archive'].post
+  update:
+    x-reversible:
+      reversal: restore from the archived-workspaces screen (no REST reversal documented)
+      window: not stated
+- target: $.paths[*][*]
+  update:
+    x-request-id: Every error carries error.request_id; log it with the integration job.

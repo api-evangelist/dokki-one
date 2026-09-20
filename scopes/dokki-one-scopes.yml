@@ -1,0 +1,694 @@
+generated: '2026-09-19'
+method: searched
+source: https://dokki.one/pub/api/api-keys-and-scopes
+docs: https://dokki.one/pub/api/api-keys-and-scopes
+corroborating_sources:
+- https://dokki.one/.well-known/oauth-authorization-server
+- https://dokki.one/.well-known/oauth-protected-resource
+- the "Required scope:" line on each of the 158 endpoint reference pages under https://dokki.one/pub/api (see openapi/dokki-one-openapi.yml
+  x-required-scope)
+summary: 'Dokki has TWO scope vocabularies. (1) API-key scopes of the form resource:action (read / write / submit)
+  that gate every /api/v1 endpoint — a tenant-bound Dokki API key carries a list of them, new keys default to read
+  scopes, and GET /api/v1/me reports the caller''s effective set. These are NOT OAuth scopes: they are attached
+  to dk_ keys at creation (POST /api/v1/api-keys). (2) The OAuth/OIDC scopes served by the RFC 8414 / OIDC discovery
+  documents for MCP clients — the five standard OIDC scopes only; authorization breadth for MCP is chosen on the
+  consent screen (Personal / Organizations / Workspaces), not by scope string. derive-oauth-scopes.py correctly
+  reports no oauth2 scheme in the generated OpenAPI; this file was written from the docs and the live metadata.'
+api_key_scopes:
+  format: <resource>:<action>
+  actions:
+  - read
+  - write
+  - submit
+  count: 67
+  documented_examples_on_scopes_page:
+    workspace:read: list accessible workspaces
+    resource:read: read resource metadata
+    content:read: read document, table, or artifact content
+    content:write: update content
+    search:read: keyword, semantic, and hybrid search
+    agent_run:write: start an agent run
+    share:write: change resource sharing
+    org_member:write: manage Org membership
+  default_for_new_keys: read scopes
+  rule: '"A scope never grants access outside the key tenant or around object permissions."'
+  scopes:
+  - scope: access_request:read
+    resource: access_request
+    action: read
+    description: read access to access request endpoints (inferred from the resource:action name; the reference
+      documents the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - listResourceAccessRequests
+  - scope: access_request:write
+    resource: access_request
+    action: write
+    description: write access to access request endpoints (inferred from the resource:action name; the reference
+      documents the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createResourceAccessRequest
+    - updateAccessRequest
+  - scope: agent:read
+    resource: agent
+    action: read
+    description: read access to agent endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getAgent
+    - listAgentMcp
+    - listAgentMemories
+    - listAgentPins
+    - listAgentSkills
+    - listAgents
+  - scope: agent:write
+    resource: agent
+    action: write
+    description: write access to agent endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - addAgentPin
+    - createAgent
+    - createAgentMcp
+    - createAgentMemory
+    - deleteAgent
+    - deleteAgentMcp
+    - deleteAgentMemories
+    - removeAgentPins
+    - replaceAgentSkills
+    - replaceAgentWorkspaces
+    - updateAgent
+    - updateAgentMcp
+    - updateAgentPins
+  - scope: agent_approval:read
+    resource: agent_approval
+    action: read
+    description: read access to agent approval endpoints (inferred from the resource:action name; the reference
+      documents the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getAgentApproval
+    - listAgentApprovals
+  - scope: agent_approval:write
+    resource: agent_approval
+    action: write
+    description: write access to agent approval endpoints (inferred from the resource:action name; the reference
+      documents the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - updateAgentApproval
+  - scope: agent_run:read
+    resource: agent_run
+    action: read
+    description: read access to agent run endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getAgentRun
+    - listAgentRuns
+  - scope: agent_run:write
+    resource: agent_run
+    action: write
+    description: start an agent run
+    documented_description: true
+    operations:
+    - cancelAgentRun
+    - createAgentRun
+  - scope: agent_schedule:read
+    resource: agent_schedule
+    action: read
+    description: read access to agent schedule endpoints (inferred from the resource:action name; the reference
+      documents the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getAgentSchedule
+    - listAgentSchedules
+  - scope: agent_schedule:write
+    resource: agent_schedule
+    action: write
+    description: write access to agent schedule endpoints (inferred from the resource:action name; the reference
+      documents the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createAgentSchedule
+    - deleteAgentSchedule
+    - updateAgentSchedule
+  - scope: api_key:read
+    resource: api_key
+    action: read
+    description: read access to api key endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - listApiKeys
+  - scope: api_key:write
+    resource: api_key
+    action: write
+    description: write access to api key endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createApiKey
+    - deleteApiKey
+  - scope: automation:read
+    resource: automation
+    action: read
+    description: read access to automation endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getAutomation
+    - listAutomationRuns
+    - listAutomations
+  - scope: automation:write
+    resource: automation
+    action: write
+    description: write access to automation endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createAutomation
+    - deleteAutomation
+    - runAutomation
+    - updateAutomation
+  - scope: chat_session:read
+    resource: chat_session
+    action: read
+    description: read access to chat session endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getChatSession
+    - listChatSessions
+  - scope: chat_session:write
+    resource: chat_session
+    action: write
+    description: write access to chat session endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createChatSession
+    - deleteChatSession
+    - replaceChatSession
+    - updateChatSession
+  - scope: comment:read
+    resource: comment
+    action: read
+    description: read access to comment endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - listResourceComments
+  - scope: comment:write
+    resource: comment
+    action: write
+    description: write access to comment endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createResourceComment
+    - deleteResourceComment
+    - updateResourceComment
+  - scope: connection:read
+    resource: connection
+    action: read
+    description: read access to connection endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - listWorkspaceConnections
+  - scope: connection:write
+    resource: connection
+    action: write
+    description: write access to connection endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - deleteWorkspaceConnection
+  - scope: connector:read
+    resource: connector
+    action: read
+    description: read access to connector endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - listWorkspaceConnectors
+  - scope: connector:write
+    resource: connector
+    action: write
+    description: write access to connector endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createWorkspaceConnector
+    - deleteWorkspaceConnector
+  - scope: content:write
+    resource: content
+    action: write
+    description: update content
+    documented_description: true
+    operations:
+    - updateResourceContent
+  - scope: credit:read
+    resource: credit
+    action: read
+    description: read access to credit endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - listCredits
+  - scope: file:read
+    resource: file
+    action: read
+    description: read access to file endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getResourceFile
+  - scope: file:write
+    resource: file
+    action: write
+    description: write access to file endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createFile
+  - scope: form:read
+    resource: form
+    action: read
+    description: read access to form endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getResourceForm
+  - scope: form:submit
+    resource: form
+    action: submit
+    description: submit access to form endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - submitForm
+  - scope: form:write
+    resource: form
+    action: write
+    description: write access to form endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createResourceForm
+    - deleteResourceForm
+    - updateResourceForm
+  - scope: im:read
+    resource: im
+    action: read
+    description: read access to im endpoints (inferred from the resource:action name; the reference documents the
+      scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getImConversation
+    - listImConversationMessages
+    - listImConversations
+  - scope: im:write
+    resource: im
+    action: write
+    description: write access to im endpoints (inferred from the resource:action name; the reference documents the
+      scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - addImConversationMember
+    - createImConversation
+    - createImConversationMessage
+    - deleteImConversation
+    - markReadImConversation
+    - updateImConversation
+    - updateImConversationSettings
+  - scope: import:read
+    resource: import
+    action: read
+    description: read access to import endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getImport
+    - listWorkspaceImports
+  - scope: import:write
+    resource: import
+    action: write
+    description: write access to import endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createWorkspaceImport
+    - deleteImport
+    - retryImport
+  - scope: member:read
+    resource: member
+    action: read
+    description: read access to member endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - listWorkspaceMembers
+  - scope: member:write
+    resource: member
+    action: write
+    description: write access to member endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - addWorkspaceMember
+    - deleteWorkspaceMember
+    - updateWorkspaceMember
+  - scope: memory:read
+    resource: memory
+    action: read
+    description: read access to memory endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getMemory
+    - listMemories
+  - scope: memory:write
+    resource: memory
+    action: write
+    description: write access to memory endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createMemory
+    - deleteMemory
+    - updateMemory
+  - scope: model:read
+    resource: model
+    action: read
+    description: read access to model endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - listModels
+  - scope: notification:read
+    resource: notification
+    action: read
+    description: read access to notification endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - listNotifications
+  - scope: notification:write
+    resource: notification
+    action: write
+    description: write access to notification endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - deleteNotifications
+    - updateNotifications
+  - scope: org:read
+    resource: org
+    action: read
+    description: read access to org endpoints (inferred from the resource:action name; the reference documents the
+      scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getOrg
+    - listOrgs
+  - scope: org:write
+    resource: org
+    action: write
+    description: write access to org endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createOrg
+    - deleteOrg
+    - updateOrg
+  - scope: org_member:read
+    resource: org_member
+    action: read
+    description: read access to org member endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - listOrgMembers
+  - scope: org_member:write
+    resource: org_member
+    action: write
+    description: manage Org membership
+    documented_description: true
+    operations:
+    - addOrgMember
+    - deleteOrgMember
+    - updateOrgMember
+  - scope: pin:read
+    resource: pin
+    action: read
+    description: read access to pin endpoints (inferred from the resource:action name; the reference documents the
+      scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - listWorkspacePins
+  - scope: pin:write
+    resource: pin
+    action: write
+    description: write access to pin endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - addWorkspacePin
+    - removeWorkspacePins
+    - updateWorkspacePins
+  - scope: publish:read
+    resource: publish
+    action: read
+    description: read access to publish endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getResourcePublish
+    - getWorkspacePublish
+  - scope: publish:write
+    resource: publish
+    action: write
+    description: write access to publish endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - publishResource
+    - publishWorkspace
+    - unpublishResource
+    - updateWorkspacePublish
+  - scope: resource:read
+    resource: resource
+    action: read
+    description: read resource metadata
+    documented_description: true
+    operations:
+    - getResource
+    - listResourcePermissions
+    - listWorkspaceResources
+  - scope: resource:write
+    resource: resource
+    action: write
+    description: write access to resource endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - copyResource
+    - createResource
+    - deleteResource
+    - updateResource
+  - scope: search:read
+    resource: search
+    action: read
+    description: keyword, semantic, and hybrid search
+    documented_description: true
+    operations:
+    - search
+  - scope: share:write
+    resource: share
+    action: write
+    description: change resource sharing
+    documented_description: true
+    operations:
+    - createResourcePermission
+    - removeResourcePermissions
+  - scope: snapshot:read
+    resource: snapshot
+    action: read
+    description: read access to snapshot endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getResourceSnapshot
+    - listResourceSnapshots
+  - scope: snapshot:write
+    resource: snapshot
+    action: write
+    description: write access to snapshot endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createResourceSnapshot
+    - deleteResourceSnapshot
+  - scope: storage:read
+    resource: storage
+    action: read
+    description: read access to storage endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getStorageUsage
+  - scope: tag:read
+    resource: tag
+    action: read
+    description: read access to tag endpoints (inferred from the resource:action name; the reference documents the
+      scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - listResourceTags
+    - listWorkspaceTags
+  - scope: tag:write
+    resource: tag
+    action: write
+    description: write access to tag endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - addResourceTag
+    - addWorkspaceTag
+    - deleteTag
+    - removeResourceTags
+    - updateTag
+  - scope: trash:read
+    resource: trash
+    action: read
+    description: read access to trash endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getWorkspaceTrash
+  - scope: trash:write
+    resource: trash
+    action: write
+    description: write access to trash endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - emptyWorkspaceTrash
+    - restoreResource
+  - scope: usage:read
+    resource: usage
+    action: read
+    description: read access to usage endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getUsage
+  - scope: usage:write
+    resource: usage
+    action: write
+    description: write access to usage endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - updateUsageSettings
+  - scope: work_item:read
+    resource: work_item
+    action: read
+    description: read access to work item endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getWorkItem
+    - listWorkItems
+  - scope: work_item:write
+    resource: work_item
+    action: write
+    description: write access to work item endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createWorkItem
+    - deleteWorkItem
+    - updateWorkItem
+  - scope: workspace:read
+    resource: workspace
+    action: read
+    description: list accessible workspaces
+    documented_description: true
+    operations:
+    - getWorkspace
+    - listWorkspaces
+  - scope: workspace:write
+    resource: workspace
+    action: write
+    description: write access to workspace endpoints (inferred from the resource:action name; the reference documents
+      the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - archiveWorkspace
+    - createWorkspace
+    - updateWorkspace
+  - scope: workspace_template:read
+    resource: workspace_template
+    action: read
+    description: read access to workspace template endpoints (inferred from the resource:action name; the reference
+      documents the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - getWorkspaceTemplate
+    - listWorkspaceTemplates
+  - scope: workspace_template:write
+    resource: workspace_template
+    action: write
+    description: write access to workspace template endpoints (inferred from the resource:action name; the reference
+      documents the scope only by naming it on each endpoint page)
+    documented_description: false
+    operations:
+    - createWorkspaceTemplate
+    - deleteWorkspaceTemplate
+no_scope_required:
+  operations:
+  - getCapabilities
+  - getMe
+  note: GET /api/v1/me and GET /api/v1/capabilities still require a valid credential; they need no specific scope.
+oauth_scopes:
+  authorization_server: https://dokki.one (metadata at /.well-known/oauth-authorization-server; endpoints on Dokki's
+    Supabase Auth tenant)
+  scopes_supported:
+  - openid
+  - profile
+  - email
+  - phone
+  - offline_access
+  protected_resource_scopes_supported:
+  - openid
+  - email
+  - profile
+  grant_types_supported:
+  - authorization_code
+  - refresh_token
+  code_challenge_methods_supported:
+  - S256
+  - plain
+  registration_endpoint: https://schcrwqbgkcmhdltwgcz.supabase.co/auth/v1/oauth/clients/register
+  consent_model: Personal / Organization / Workspace selection on the consent screen; reconnect to change the grant
+    — "Do not assume that passing a different workspace_id can expand an existing grant."
+integration_patterns_from_docs:
+  read_only_indexer:
+  - workspace:read
+  - resource:read
+  - content:read
+  - search:read
+  content_synchronizer:
+  - workspace:read
+  - resource:read
+  - content:read
+  - search:read
+  - content:write
+  ai_agent: start with read scopes, add one write scope at a time, require approval for publishing, sharing, deletion
+    or billing

@@ -1,0 +1,188 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/dokki-one-openapi.yml — path nesting and documented id fields (the reference publishes no schemas,
+  so relationships come from URL structure and the guides at https://dokki.one/pub/api/resources-and-workspaces
+  and .../concepts pages).
+id_scheme: UUIDs everywhere ("IDs are UUIDs. Timestamps are ISO 8601 strings in UTC."); request identifiers are
+  prefixed req_; API keys are prefixed dk_.
+entities:
+- name: Organization
+  path: /api/v1/orgs/{org_id}
+  description: Tenant boundary for Org API keys; groups workspaces and members.
+- name: Workspace
+  path: /api/v1/workspaces/{workspace_id}
+  description: Tenant-local container for a resource tree; may be archived; has pins, tags, members, connectors,
+    connections, imports, trash and a published site.
+- name: Resource
+  path: /api/v1/resources/{resource_id}
+  description: Document, table, artifact, folder or file arranged in a tree (parent_id, insert_after_id); carries
+    metadata, icon, is_private, public_access.
+  types:
+  - document
+  - table
+  - artifact
+  - folder
+  - file
+- name: Snapshot
+  path: /api/v1/resources/{resource_id}/snapshots/{snapshot_id}
+  description: Recovery point for a document, table or artifact (version number, timestamps, type, description,
+    counts, preview).
+- name: Comment
+  path: /api/v1/resources/{resource_id}/comments/{comment_id}
+- name: Permission
+  path: /api/v1/resources/{resource_id}/permissions
+  description: 'Explicit resource roles: viewer, commenter, editor, admin.'
+- name: AccessRequest
+  path: /api/v1/access-requests/{request_id}
+- name: Form
+  path: /api/v1/resources/{resource_id}/form
+  description: Collection form attached to a table; public form token + webhook token.
+- name: Tag
+  path: /api/v1/tags/{tag_id}
+- name: Member
+  path: /api/v1/workspaces/{workspace_id}/members/{member_id}
+- name: OrgMember
+  path: /api/v1/orgs/{org_id}/members/{member_id}
+- name: Import
+  path: /api/v1/imports/{import_id}
+  description: Asynchronous operation that creates or updates workspace resources.
+- name: Connector
+  path: /api/v1/workspaces/{workspace_id}/connectors/{connector_id}
+  description: Admin-managed MCP credential locked to one workspace (Documents, Publish or Memory flavor).
+- name: Connection
+  path: /api/v1/workspaces/{workspace_id}/connections/{connection_id}
+  description: External-app (MCP App) connection.
+- name: Agent
+  path: /api/v1/agents/{agent_id}
+  description: User-owned automation identity with workspace bindings, skills, memories, pins and MCP servers.
+- name: AgentRun
+  path: /api/v1/agent-runs/{run_id}
+- name: AgentApproval
+  path: /api/v1/agent-approvals/{approval_id}
+- name: AgentSchedule
+  path: /api/v1/agent-schedules/{schedule_id}
+- name: Memory
+  path: /api/v1/memories/{memory_id}
+- name: Automation
+  path: /api/v1/automations/{automation_id}
+  description: Workspace-scoped handler with runs.
+- name: WorkItem
+  path: /api/v1/work-items/{work_item_id}
+- name: ChatSession
+  path: /api/v1/chat-sessions/{session_id}
+  description: Durable conversation container with structured message parts.
+- name: Conversation
+  path: /api/v1/im/conversations/{conversation_id}
+  description: IM conversation with members, messages, read state and settings.
+- name: ApiKey
+  path: /api/v1/api-keys/{key_id}
+  description: Tenant-bound credential (Personal or one Org) with scopes.
+- name: WorkspaceTemplate
+  path: /api/v1/workspace-templates/{template_id}
+- name: Publication
+  path: /api/v1/workspaces/{workspace_id}/publish
+  description: Workspace public site (slug, custom domain) and per-resource published snapshots.
+relationships:
+- from: Organization
+  to: Workspace
+  type: has_many
+  via: org_id
+- from: Organization
+  to: OrgMember
+  type: has_many
+  via: /orgs/{org_id}/members
+- from: Organization
+  to: ApiKey
+  type: has_many
+  via: org_id (null for Personal keys)
+- from: Workspace
+  to: Resource
+  type: has_many
+  via: workspace_id
+- from: Workspace
+  to: Member
+  type: has_many
+  via: /workspaces/{workspace_id}/members
+- from: Workspace
+  to: Tag
+  type: has_many
+  via: /workspaces/{workspace_id}/tags
+- from: Workspace
+  to: Import
+  type: has_many
+  via: /workspaces/{workspace_id}/imports
+- from: Workspace
+  to: Connector
+  type: has_many
+  via: /workspaces/{workspace_id}/connectors
+- from: Workspace
+  to: Connection
+  type: has_many
+  via: /workspaces/{workspace_id}/connections
+- from: Workspace
+  to: Publication
+  type: has_one
+  via: /workspaces/{workspace_id}/publish
+- from: Workspace
+  to: Automation
+  type: has_many
+  via: ?workspace_id=
+- from: Resource
+  to: Resource
+  type: belongs_to
+  via: parent_id (tree)
+- from: Resource
+  to: Snapshot
+  type: has_many
+  via: /resources/{resource_id}/snapshots
+- from: Resource
+  to: Comment
+  type: has_many
+  via: /resources/{resource_id}/comments
+- from: Resource
+  to: Permission
+  type: has_many
+  via: /resources/{resource_id}/permissions
+- from: Resource
+  to: AccessRequest
+  type: has_many
+  via: /resources/{resource_id}/access-requests
+- from: Resource
+  to: Tag
+  type: has_many
+  via: /resources/{resource_id}/tags
+- from: Resource
+  to: Form
+  type: has_one
+  via: /resources/{resource_id}/form (tables only)
+- from: Agent
+  to: AgentRun
+  type: has_many
+  via: agent_id
+- from: Agent
+  to: AgentSchedule
+  type: has_many
+  via: agent_id
+- from: Agent
+  to: Memory
+  type: has_many
+  via: /agents/{agent_id}/memories
+- from: Agent
+  to: Workspace
+  type: has_many
+  via: PUT /agents/{agent_id}/workspaces (bindings)
+- from: AgentRun
+  to: AgentApproval
+  type: has_many
+  via: run (approval gates for high-impact actions)
+- from: Automation
+  to: AgentRun
+  type: has_many
+  via: /automations/{automation_id}/runs
+- from: Conversation
+  to: Member
+  type: has_many
+  via: /im/conversations/{conversation_id}/members
+render: null
+note: Derived only from URL structure and documented fields; cardinalities beyond what a nested path implies are
+  not asserted.

@@ -1,0 +1,85 @@
+generated: '2026-09-19'
+method: searched
+source: https://dokki.one/pub/api/changelog
+product_release_notes: https://dokki.one/pub/docs/release-notes
+title: Dokki API Changelog + product release notes
+scheme: >-
+  Two dated logs. The API changelog ("This page records externally visible API changes") is a single
+  page with one entry; product release notes are semantic-versioned pages (v1.0.0 ... v1.5.0) each
+  carrying a "Released:" date and What changed / Try it / Do I need to do anything? sections.
+current_version:
+  api: v1 (path version /api/v1)
+  product: v1.5.0 ("v1.5.0 is the current Dokki product release")
+entry_count: 10
+entries:
+- date: '2026-07-10'
+  log: api
+  version: v1
+  breaking: false
+  category: added
+  highlights:
+  - Added the public API endpoint catalog under /api/v1.
+  - Added API key scope persistence and capability filtering.
+  - Added initial developer documentation structure for authentication, resources, search, agents, collaboration, publishing, and operations.
+  note: '"Future entries should include the date, affected endpoints, migration notes, and whether the change is backward compatible."'
+- date: '2026-07-20'
+  log: product
+  version: v1.5.0
+  breaking: false
+  highlights:
+  - Documents can show Referenced by.
+  - Connect separates AI Clients, MCP Apps and Channels by purpose; AI Clients show recent activity.
+  - Imports follow one path and link completed items to created resources.
+  - New users start with the built-in Dokki Agent.
+  url: https://dokki.one/pub/docs/v1-5-0-connected-work-safer-organizations-faster-search
+- date: '2026-07-20'
+  log: product
+  version: v1.4.0
+  breaking: false
+  highlights: [Smoother conversations, realtime voice calls with transcript context, connected imports]
+  url: https://dokki.one/pub/docs/v1-4-0-smoother-conversations-realtime-calls-connected-imports
+- date: '2026-07-19'
+  log: product
+  version: v1.3.0
+  breaking: false
+  highlights: [Structured references between resources, safer table structure changes, stricter upload checks, provider errors surfaced for external app connections]
+  url: https://dokki.one/pub/docs/v1-3-0-connected-references-safer-tables-publishing-improvements
+- date: '2026-07-18'
+  log: product
+  version: v1.2.0
+  breaking: false
+  highlights: [Resource Links across workspaces, Deep Search over more resource types, published-site home/cover/search metadata, more reliable multi-step table changes]
+  url: https://dokki.one/pub/docs/v1-2-0-connected-knowledge-faster-tables-easier-setup
+- date: '2026-07-18'
+  log: product
+  version: v1.1.0
+  breaking: false
+  highlights: [Single workspace anchor navigation, recents-first switcher, Messages notifications]
+  url: https://dokki.one/pub/docs/v1-1-0-clearer-navigation-better-ai-conversations-safer-collaboration
+- date: '2026-07-16'
+  log: product
+  version: v1.0.3
+  breaking: false
+  highlights: ['MCP OAuth compatibility hotfix: connections presenting an older credential during renewal now recover; "Existing MCP connections recover on their own the next time they renew."']
+  url: https://dokki.one/pub/docs/v1-0-3-mcp-oauth-compatibility-hotfix
+- date: '2026-07-15'
+  log: product
+  version: v1.0.2
+  breaking: false
+  highlights: [Onboarding continues across devices, starter workspaces, tightened collaborative document and Artifact permissions]
+  url: https://dokki.one/pub/docs/v1-0-2-onboarding-activation-reliability
+- date: '2026-07-14'
+  log: product
+  version: v1.0.1
+  breaking: false
+  highlights: [Steadier Messages (no diverging/duplicated conversations), workspace file deletion reliability]
+  url: https://dokki.one/pub/docs/v1-0-1-steadier-messages-workspace-fixes
+- date: '2026-07-13'
+  log: product
+  version: v1.0.0
+  breaking: false
+  highlights: [First published release]
+  url: https://dokki.one/pub/docs/v1-0-0-first-published-release
+gaps:
+- The API changelog has recorded nothing since 2026-07-10 although the reference gained form endpoints and the /mcp/v2 facade replaced the flat server (the Claude Code plugin README documents that migration); the discipline the page prescribes is not yet being followed.
+- A second "Changelog" page (https://dokki.one/pub/api/changelog-1) is empty ("No content available").

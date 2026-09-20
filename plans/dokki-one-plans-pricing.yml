@@ -1,0 +1,80 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Dokki
+providerId: dokki-one
+generated: '2026-09-19'
+method: searched
+source: https://dokki.one/plans
+sources:
+- https://dokki.one/plans
+- https://dokki.one/pub/docs/org-pricing
+- https://dokki.one/pub/docs/faq
+created: '2026-09-19'
+modified: '2026-09-19'
+currency: USD
+plan_count: 4
+description: >-
+  Dokki is seat-priced for individuals (Free / Pro / Max) with an Enterprise contract tier, plus two
+  add-ons. Organization (self-serve Business Starter / Standard / Max) plans are billed per member but
+  the amount is read live from Stripe and NOT published on any public page ("The organization seat
+  price is read live from Stripe"), so they are listed without prices. There is no separate API
+  pricing: the REST API and MCP server are features of the workspace subscription (Business Starter
+  "includes organization MCP access"); AI usage is metered in credits against a plan quota.
+plans:
+- id: dokki-free
+  name: Free
+  price: 0
+  currency: USD
+  billing_period: forever
+  description: Personal use, get started in seconds.
+  included:
+  - Up to 3 workspaces
+  - Basic AI Copilot models
+  - 5 AI messages / day (top up with credits anytime)
+  - 14-day Pro trial on signup
+  entries:
+  - {label: Workspaces, name: workspaces, type: limit, metric: workspace, limit: 3, timeFrame: plan}
+  - {label: AI messages, name: ai_messages, type: limit, metric: message, limit: 5, timeFrame: day}
+- id: dokki-pro
+  name: Pro
+  price: 18
+  currency: USD
+  billing_period: month
+  description: For individuals who collaborate and use AI heavily. "Most popular".
+  included:
+  - Up to 20 workspaces
+  - Deepseek / Minimax + 10+ advanced models
+  - Collaborate in any Team workspace at no seat cost
+  - Add-on credits & extra workspaces
+  entries:
+  - {label: Workspaces, name: workspaces, type: limit, metric: workspace, limit: 20, timeFrame: plan}
+- id: dokki-max
+  name: Max
+  price: 100
+  currency: USD
+  billing_period: month
+  description: Frontier models with 5x Pro's monthly usage (a 20x option is also shown on the page toggle).
+  included:
+  - Unlimited workspaces
+  - Opus / GPT-5.5 + 10+ frontier models
+  - 5x Pro's monthly AI quota
+  - Everything in Pro
+  entries:
+  - {label: Workspaces, name: workspaces, type: limit, metric: workspace, limit: -1, timeFrame: plan}
+- id: dokki-enterprise
+  name: Enterprise
+  price: null
+  currency: USD
+  billing_period: contract
+  description: '"Let''s talk" — request a demo. Everything in Max plus Org-wide roles & governance, model allowlist & per-member spend limits, usage tracking & oversight, dedicated support & onboarding. The org-pricing doc adds that an Enterprise contract can include SAML SSO, SCIM and audit capabilities.'
+organization_plans:
+  note: Per-member Business tiers; price shown only in organization billing settings / Stripe checkout.
+  tiers:
+  - {name: Business Starter, price: null, includes: [member AI usage, organization MCP access]}
+  - {name: Business Standard, price: null, includes: [Knowledge Graph, model governance, usage controls, Sites, AI Pro Models, higher Agent Loop and usage allowances]}
+  - {name: Business Max, price: null, includes: [AI Max Models, higher Agent Loop / MCP / usage allowances]}
+add_ons:
+- {name: Credits, price: pay-as-you-go, description: AI usage past the plan quota; recharge amounts shown at purchase time.}
+- {name: Additional Workspaces, price: 2, currency: USD, billing_period: 'workspace / month', description: Extra workspaces beyond Pro's 20-workspace cap.}
+trial: Every new account gets a 14-day Pro trial; no credit card to start; cancel anytime.

@@ -1,4 +1,4 @@
-# Brad
+# Dokki
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,5 +64,8 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Brad is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry) and added to the network as a stub for full-pipeline profiling.
+Dokki (UEVNS PTE. LTD., Singapore) is an agent-native collaboration workspace where people and AI agents share the same documents, tables, artifacts, chat and permissions. This profile covers its REST API (https://dokki.one/api/v1, documented at https://dokki.one/pub/api), its hosted MCP servers (https://dokki.one/mcp/v2 facade and legacy /api/mcp), the OAuth/OIDC discovery documents it serves, its provider-published Agent Skills, llms.txt, plans, and the runtime conventions an integrator or agent needs. It was first staged as "Brad" from an a2aregistry.org listing; the company is Dokki.
 - https://dokki.one/
+- https://dokki.one/pub/api
+- https://dokki.one/pub/docs
+- https://github.com/Dokki-lab

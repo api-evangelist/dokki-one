@@ -1,0 +1,42 @@
+generated: '2026-09-19'
+method: searched
+source: https://dokki.one/pub/api/api-conventions
+docs: https://dokki.one/pub/docs/release-notes
+versioning:
+  scheme: URL path version
+  current_version: v1
+  base_url: https://dokki.one/api/v1
+  preview_status: reported by GET /api/v1/capabilities ("API version and preview status")
+  policy_published: false
+  note: >-
+    All public endpoints use https://dokki.one/api/v1. The capabilities endpoint, not a document, is
+    declared the source of truth for what is exposed, and the provider warns that "A later version of
+    the API will expose stronger conditional-write headers" — so v1 is explicitly still moving. No
+    written versioning or backward-compatibility policy exists beyond "Treat unknown response fields as
+    forward-compatible additions."
+  product_release: v1.5.0 (2026-07-20) per https://dokki.one/pub/docs/release-notes
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  observed_removals:
+  - what: The separate dokki-publish MCP server at /api/publish-mcp was folded into the /mcp/v2 facade ("the old separate dokki-publish server ... has been folded in and should be dropped", skills/dokki-one-dokki-publish.md); the flat /api/mcp server (~37 tools) is now "legacy" and kept "for older client configurations".
+    dated: no — neither the API changelog nor the release notes records the migration.
+  note: >-
+    The Documentation Maintenance page prescribes dated changelog entries with migration notes and
+    backward-compatibility flags for every endpoint change, but the API changelog has a single entry
+    (2026-07-10). No operation in the reference is marked deprecated.
+status_page:
+  url: null
+  found: false
+  probed: [https://status.dokki.one (404 text/plain, Vercel wildcard)]
+  note: No status page is linked from the site, docs or footer.
+sla:
+  published: false
+  note: 'Terms of Service: "as is" and "as available"; "We do not guarantee that the service will be uninterrupted, error-free". Enterprise tier promises "Dedicated support & onboarding" only.'
+support_lifetime:
+  stated_period: null
+  statement: '"We may update, suspend, or discontinue parts of Dokki as the product evolves. We will try to provide reasonable notice for material changes that affect paid users or core workflows."'
+changelog: changelog/dokki-one-changelog.yml

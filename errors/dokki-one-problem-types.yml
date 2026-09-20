@@ -1,0 +1,82 @@
+generated: '2026-09-19'
+method: searched
+source: https://dokki.one/pub/api/pagination-errors-and-rate-limits
+docs: https://dokki.one/pub/api/authentication
+spec: openapi/dokki-one-openapi.yml
+format: custom
+envelope:
+  media_type: application/json
+  rfc9457: false
+  shape: '{ "error": { "code": string, "message": string, "request_id": uuid } }'
+  fields:
+  - {name: error.code, description: 'Stable machine-readable code (e.g. unauthorized, insufficient_scope, forbidden).'}
+  - {name: error.message, description: Human-readable explanation.}
+  - {name: error.request_id, description: Request identifier to log and quote in support tickets.}
+  example: {error: {code: forbidden, message: Resource access denied, request_id: uuid}}
+  observed_live: '{"error":{"code":"unauthorized","message":"Authentication required","request_id":"d42ccf1f-c61d-47bd-872d-82bd062a97bb"}} from GET /api/v1/capabilities without a credential (HTTP 401, 2026-09-19).'
+problem_types:
+- status: 400
+  code: invalid request
+  title: Invalid request
+  retry: false
+  remediation: Fix the request body or parameters; do not retry unchanged.
+- status: 401
+  code: unauthorized
+  title: Missing or invalid authentication
+  detail: missing, invalid, expired, or revoked credentials
+  retry: false
+  remediation: Reauthorize or replace the credential; verify with GET /api/v1/me.
+- status: 403
+  code: insufficient_scope
+  title: Credential lacks the endpoint scope
+  retry: false
+  remediation: Create or authorize a key carrying the endpoint's required scope (see scopes/dokki-one-scopes.yml); GET /api/v1/me shows effective scopes.
+- status: 403
+  code: forbidden
+  title: Tenant or object permission denies access
+  detail: the credential scope is valid but tenant or object permission denies access
+  retry: false
+  remediation: Check Org/Personal tenant boundary and resource role; do not retry with broader credentials.
+- status: 404
+  code: not found
+  title: Resource not found
+  detail: Also returned as non-disclosure — "A 404 may be returned when revealing resource existence would leak information."
+  retry: false
+- status: 408
+  title: Request timeout
+  retry: true
+  remediation: Retry with exponential backoff and jitter; for creates, reconcile by name/metadata first (no server-side idempotency).
+- status: 409
+  code: conflicting state
+  title: Conflicting state
+  retry: false
+  remediation: Re-read the resource (and content / snapshots) before re-sending; serialize writers per resource.
+- status: 422
+  title: Unprocessable request
+  retry: false
+  remediation: Listed in the retry policy as not retryable unchanged; no code string published.
+- status: 429
+  code: rate limit exceeded
+  title: Rate limit exceeded
+  retry: true
+  remediation: Back off with jitter; bound concurrency per key, Org and workspace. No limit numbers or headers are published (rate-limits/dokki-one-rate-limits.yml).
+- status: 5xx
+  title: Server error
+  retry: true
+  remediation: Retry with exponential backoff and jitter; preserve request_id.
+mcp_errors:
+  transport: JSON-RPC 2.0
+  observed:
+  - {code: -32001, message: Unauthorized, http_status: 401, note: 'Anonymous tools/list and initialize on /mcp/v2 and /api/mcp; WWW-Authenticate carries resource_metadata.'}
+  facade_soft_errors:
+  - {code: invalid_action, meaning: Unknown or misspelled facade action; response lists nearest matches.}
+  - {code: missing_args, meaning: Required args absent; response carries the exact keys and an example.}
+  - {code: requires_confirmation, meaning: Destructive action (resource.delete, column delete, share public, publish add); re-send the same call with the returned confirm_token.}
+  source: https://github.com/Dokki-lab/dokki-plugin/blob/main/README.md
+retry_policy:
+  retry_with_backoff: [network failures, 408, 429, 5xx]
+  do_not_retry_unchanged: [400, 401, 403, 404, 422]
+consistency_gap: >-
+  Endpoint pages list the same six status codes (400/401/403/404/409/429) uniformly and publish no
+  per-endpoint code strings beyond the three authentication codes; a client cannot enumerate
+  error.code values ahead of time.

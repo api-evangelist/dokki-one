@@ -1,0 +1,45 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+provider: Dokki (UEVNS PTE. LTD., Singapore)
+searched:
+  artifacts: [well-known/ (no security.txt), security/ (no trust center, no VDP), lifecycle/, conformance/]
+  paths_probed:
+  - {url: https://dokki.one/accessibility, status: 307, note: redirects to /auth/login}
+  - {url: https://dokki.one/legal/subprocessors, status: 307, note: redirects to /auth/login}
+  - {url: https://dokki.one/legal/dpa, status: 307, note: redirects to /auth/login}
+  - {url: https://dokki.one/security, status: 307, note: redirects to /auth/login}
+  - {url: https://dokki.one/privacy, status: 200}
+  - {url: https://dokki.one/terms, status: 200}
+  - {url: https://dokki.one/pub/docs/import-and-export, status: 200}
+  docs_searched: [https://dokki.one/pub/docs (93 pages in the sitemap; residency / VPAT / SBOM / subprocessor / incident terms grep'd across the fetched set)]
+signals:
+  data_subject_request:
+    url: https://dokki.one/privacy#your-choices-and-rights
+    channel: privacy@dokki.one (Data Protection Officer)
+    note: >-
+      The Privacy Policy (effective 2026-08-11) states the rights offered (access, information about
+      use/disclosure, correction; deletion, restriction, objection or portability depending on
+      location; withdrawal of consent) and the channel to exercise them, with identity verification and
+      a controller-first rule for enterprise workspaces. There is no self-service request form or API;
+      the signal is a published statement + channel, not a portal.
+  exit_assistance:
+    url: https://dokki.one/pub/docs/import-and-export
+    note: >-
+      Documented workspace export: admins download the workspace as a ZIP preserving folder hierarchy —
+      documents as Markdown, tables as CSV, Artifacts as HTML or JSX, uploaded files as original bytes.
+      Per-document export to PDF, Markdown, text, Word or image. The page itself states the archive is
+      not a complete backup of connections, comments, history, permissions or other metadata.
+not_found:
+  sbom: no SBOM published (search only; never derived)
+  support_lifetime: no stated support period ("We may update, suspend, or discontinue parts of Dokki as the product evolves. We will try to provide reasonable notice" — not a period)
+  accessibility_conformance: /accessibility redirects to login; no VPAT or WCAG conformance statement (dokki-charts' README claims accessible output but that is a product feature, not a conformance report)
+  training_data_summary: none (the Privacy Policy states Dokki does not train its own general-purpose models on workspace content and that model providers process requests under terms that prohibit training — a no-training statement, not a training-data summary)
+  ai_transparency: none in the Art. 50 sense (the Privacy Policy names the nine model providers a request may be routed to — Anthropic, OpenAI, Google, DeepSeek, MiniMax, StepFun, xAI, Alibaba, Z.ai — which is data-processing disclosure)
+  global_privacy_control: no published GPC statement (analytics consent banner only); not probed by header, per the rule
+  subprocessors: no dated subprocessor table; the Privacy Policy names vendor categories and marketing analytics vendors (Vercel Analytics, Cloudflare Web Analytics, Ahrefs, Google Ads measurement) and Stripe for payments
+  data_residency: none (transfer statement under Singapore PDPA 2012 only)
+  incident_notification: none published (DPA behind login)
+  age_assurance: none (service "is not directed to children"; no mechanism)
+  notice_and_action: none
+  transparency_report: none

@@ -1,0 +1,329 @@
+generated: '2026-09-19'
+method: derived
+source: mcp/dokki-one-mcp.yml (facade tool list from https://dokki.one/pub/docs/clients and the Dokki-lab plugin
+  READMEs) bound to openapi/dokki-one-openapi.yml (generated from https://dokki.one/pub/api).
+summary: 'Dokki ships two hosted MCP surfaces over the same data core as its REST API: the /mcp/v2 facade (8 action-routed
+  tools + preview_resource) and the legacy flat /api/mcp server (~37 tools, names not published). Both answer tools/list
+  with 401 anonymously, so this crosswalk binds by the ACTION VOCABULARY the provider documents for each facade
+  tool (find/read/create/edit/share/message/publish/connect) to the REST operations that cover the same nouns. The
+  REST document is itself generated from the reference (no request/response schemas), so no tool inherits a full
+  inputSchema here; confidence is medium at best and low where the facade action has no visible REST twin.'
+surfaces:
+  openapi:
+    file: openapi/dokki-one-openapi.yml
+    operations: 158
+    origin: generated from documentation; provider publishes no OpenAPI
+  mcp:
+  - endpoint: https://dokki.one/mcp/v2
+    tools_list: gated (HTTP 401, JSON-RPC -32001 Unauthorized; WWW-Authenticate resource_metadata points at /.well-known/oauth-protected-resource)
+    tool_count: 9
+  - endpoint: https://dokki.one/api/mcp
+    tools_list: gated (HTTP 401)
+    tool_count: ~37 (provider-stated, names unpublished)
+  - endpoint: https://dokki.one/api/publish-mcp
+    note: Publish workspace-connector flavor (connector URL only)
+  - endpoint: https://dokki.one/api/mem-mcp
+    note: Memory workspace-connector flavor (connector URL only)
+  graphql: null
+crosswalk:
+- tool: find
+  category: discovery
+  actions:
+  - workspaces
+  - resources
+  - search
+  - grep
+  - related
+  - templates
+  rest:
+  - listWorkspaces
+  - getWorkspace
+  - listWorkspaceResources
+  - search
+  - listWorkspaceTemplates
+  - getWorkspaceTemplate
+  - listWorkspaceTags
+  - listResourceTags
+  binding: rest
+  confidence: medium
+  note: search action maps to POST /api/v1/search (mode keyword|semantic|hybrid); grep and related (knowledge graph)
+    have no distinct REST operation in the reference.
+- tool: read
+  category: read
+  actions:
+  - doc
+  - table
+  - artifact
+  - file
+  rest:
+  - getResource
+  - getResourceFile
+  - listResourceSnapshots
+  - getResourceSnapshot
+  binding: rest
+  confidence: medium
+  note: The reference describes GET /api/v1/resources/{resource_id}/content for reading content but that page returned
+    404 on 2026-09-19, so only the resource, file and snapshot reads are bound.
+- tool: create
+  category: write
+  actions:
+  - workspace
+  - folder
+  - doc
+  - table
+  - artifact
+  - file
+  rest:
+  - createWorkspace
+  - createResource
+  - createFile
+  binding: rest
+  confidence: high
+  note: createResource takes type document|table|artifact|folder|file per the reference.
+- tool: edit
+  category: write
+  actions:
+  - resource.update
+  - resource.move
+  - resource.tag
+  - resource.untag
+  - resource.delete
+  - doc.edit
+  - doc.rewrite
+  - table.edit
+  - artifact.update
+  - artifact.patch
+  rest:
+  - updateResource
+  - updateResourceContent
+  - addResourceTag
+  - removeResourceTags
+  - deleteResource
+  - createResourceSnapshot
+  - restoreResource
+  binding: rest
+  confidence: medium
+  note: Node-level doc.edit op-arrays and table cell/column ops have no REST equivalent finer than PATCH /content;
+    the facade returns a confirm_token for resource.delete and column deletes.
+- tool: share
+  category: access
+  actions:
+  - user
+  - public
+  rest:
+  - listResourcePermissions
+  - createResourcePermission
+  - removeResourcePermissions
+  - updateResource
+  binding: rest
+  confidence: medium
+  note: public access is the public_access field on PATCH /api/v1/resources/{resource_id}; share public requires
+    confirmation on the facade.
+- tool: message
+  category: collaboration
+  actions:
+  - members
+  - send
+  - read
+  rest:
+  - listImConversations
+  - getImConversation
+  - listImConversationMessages
+  - createImConversationMessage
+  - markReadImConversation
+  - addImConversationMember
+  binding: rest
+  confidence: medium
+- tool: publish
+  category: publishing
+  actions:
+  - site
+  - site.create
+  - site.update
+  - add
+  - remove
+  - domain.*
+  - list
+  rest:
+  - getWorkspacePublish
+  - publishWorkspace
+  - updateWorkspacePublish
+  - publishResource
+  - unpublishResource
+  - getResourcePublish
+  binding: rest
+  confidence: medium
+  note: Custom-domain status actions are described in the Publishing guide but no domain endpoint page exists in
+    the reference.
+- tool: connect
+  category: integrations
+  actions:
+  - apps
+  - list
+  - authorize
+  - disconnect
+  - tools
+  - call
+  rest:
+  - listWorkspaceConnections
+  - deleteWorkspaceConnection
+  binding: rest
+  confidence: low
+  note: connect brokers 1000+ external toolkits through Composio on behalf of the acting user; the REST reference
+    exposes only workspace-level connection listing/removal. Authorize/tools/call are MCP-only.
+- tool: preview_resource
+  category: read
+  actions: []
+  rest: []
+  binding: none
+  confidence: high
+  note: MCP Apps UI resource (rendered inline preview); no REST counterpart by design.
+mcp_only:
+- tool: connect (authorize/tools/call)
+  reason: External-integration brokerage exists only on the MCP facade.
+- tool: preview_resource
+  reason: MCP Apps UI surface.
+- tool: find (grep, related)
+  reason: Exact-text grep and knowledge-graph traversal have no REST operation in the published reference.
+rest_only:
+  agents_and_automation:
+  - addAgentPin
+  - cancelAgentRun
+  - createAgent
+  - createAgentMcp
+  - createAgentMemory
+  - createAgentRun
+  - createAgentSchedule
+  - createAutomation
+  - createMemory
+  - createWorkItem
+  - deleteAgent
+  - deleteAgentMcp
+  - deleteAgentMemories
+  - deleteAgentSchedule
+  - deleteAutomation
+  - deleteMemory
+  - deleteWorkItem
+  - getAgent
+  - getAgentApproval
+  - getAgentRun
+  - getAgentSchedule
+  - getAutomation
+  - getMemory
+  - getWorkItem
+  - listAgentApprovals
+  - listAgentMcp
+  - listAgentMemories
+  - listAgentPins
+  - listAgentRuns
+  - listAgentSchedules
+  - listAgentSkills
+  - listAgents
+  - listAutomationRuns
+  - listAutomations
+  - listMemories
+  - listWorkItems
+  - removeAgentPins
+  - replaceAgentSkills
+  - replaceAgentWorkspaces
+  - runAutomation
+  - updateAgent
+  - updateAgentApproval
+  - updateAgentMcp
+  - updateAgentPins
+  - updateAgentSchedule
+  - updateAutomation
+  - updateMemory
+  - updateWorkItem
+  organizations_and_membership:
+  - addOrgMember
+  - addWorkspaceMember
+  - createOrg
+  - deleteOrg
+  - deleteOrgMember
+  - deleteWorkspaceMember
+  - getOrg
+  - listOrgMembers
+  - listOrgs
+  - listWorkspaceMembers
+  - updateOrg
+  - updateOrgMember
+  - updateWorkspaceMember
+  account_and_keys:
+  - addImConversationMember
+  - addOrgMember
+  - addWorkspaceMember
+  - createAgentMemory
+  - createApiKey
+  - createImConversationMessage
+  - createMemory
+  - deleteAgentMemories
+  - deleteApiKey
+  - deleteMemory
+  - deleteNotifications
+  - deleteOrgMember
+  - deleteWorkspaceMember
+  - getCapabilities
+  - getMe
+  - getMemory
+  - getStorageUsage
+  - getUsage
+  - listAgentMemories
+  - listApiKeys
+  - listCredits
+  - listImConversationMessages
+  - listMemories
+  - listModels
+  - listNotifications
+  - listOrgMembers
+  - listWorkspaceMembers
+  - updateMemory
+  - updateNotifications
+  - updateOrgMember
+  - updateUsageSettings
+  - updateWorkspaceMember
+  imports_forms_trash_pins_access:
+  - addAgentPin
+  - addWorkspacePin
+  - archiveWorkspace
+  - copyResource
+  - createChatSession
+  - createResourceAccessRequest
+  - createResourceComment
+  - createResourceForm
+  - createWorkspaceConnector
+  - createWorkspaceImport
+  - deleteChatSession
+  - deleteImport
+  - deleteResourceComment
+  - deleteResourceForm
+  - deleteWorkspaceConnector
+  - emptyWorkspaceTrash
+  - getChatSession
+  - getImport
+  - getResourceForm
+  - getWorkspaceTrash
+  - listAgentPins
+  - listChatSessions
+  - listResourceAccessRequests
+  - listResourceComments
+  - listWorkspaceConnectors
+  - listWorkspaceImports
+  - listWorkspacePins
+  - removeAgentPins
+  - removeWorkspacePins
+  - replaceChatSession
+  - retryImport
+  - submitForm
+  - updateAccessRequest
+  - updateAgentPins
+  - updateChatSession
+  - updateResourceComment
+  - updateResourceForm
+  - updateWorkspacePins
+coverage:
+  mcp_tools_named: 9
+  mcp_tools_bound: 8
+  mcp_only: 3
+  rest_operations: 158
+  rest_operations_with_tool: 39

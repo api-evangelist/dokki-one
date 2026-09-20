@@ -1,0 +1,135 @@
+generated: '2026-09-19'
+method: probed
+source: >-
+  Live GET probes of the named /.well-known/* path list on 2026-09-19 against dokki.one (the website,
+  the REST API host AND the MCP resource host — Dokki serves everything from one origin) plus the
+  Vercel wildcard subdomains that resolve for the domain. Every row is a request that was issued;
+  every status is the one returned.
+summary:
+  hosts_probed: 7
+  paths_probed: 18
+  documents_served: 3
+  path_echo_control: passed
+  note: >-
+    dokki.one serves the three OAuth/OIDC discovery documents an MCP client needs — RFC 8414
+    authorization-server metadata, OpenID Connect discovery and RFC 9728 protected-resource metadata
+    whose `resource` is https://dokki.one/api/mcp and whose resource_documentation points at
+    /pub/docs — and nothing else from the list: no security.txt, no api-catalog, no agent card at
+    either A2A path, no apis.json. The issuer is https://dokki.one but authorization, userinfo, JWKS
+    and dynamic-client-registration endpoints live on Dokki's Supabase Auth tenant
+    (schcrwqbgkcmhdltwgcz.supabase.co); only the token endpoint (/api/oauth/token) is on dokki.one.
+    The 401 from both MCP endpoints carries WWW-Authenticate: Bearer resource_metadata=
+    "https://dokki.one/.well-known/oauth-protected-resource?resource=https%3A%2F%2Fdokki.one%2Fapi%2Fmcp".
+  negative_control: >-
+    GET /.well-known/dokki-one-negative-control-9c1f2a7b.json returned 404 (application/json,
+    68 bytes) — the host does not path-echo, so the three 200s are real documents. Unknown
+    /.well-known/* paths return a JSON 404 body {"error":{"code":"404","message":"The page could not be found"}}.
+  mcp_host_note: >-
+    The MCP endpoints (https://dokki.one/mcp/v2, https://dokki.one/api/mcp) sit on the primary
+    domain, so the RFC 9728 document above IS the MCP-host protected-resource metadata. The
+    subdomains api./mcp./docs./app./status.dokki.one resolve (Vercel wildcard) but every path on them,
+    including /, returns a 404 text/plain body — they host nothing.
+hosts:
+- host: dokki.one
+  role: Website, REST API base (https://dokki.one/api/v1), MCP resource host, docs host (/pub/docs, /pub/api)
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: application/json
+    file: dokki-one-openid-configuration.json
+    standard: OpenID Connect Discovery 1.0
+    note: issuer https://dokki.one; endpoints on the Supabase Auth tenant; scopes openid profile email phone offline_access; PKCE S256 and plain; token_endpoint_auth_methods include none (public clients).
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    file: dokki-one-oauth-authorization-server.json
+    standard: RFC 8414
+    note: Byte-identical to the openid-configuration document. Carries registration_endpoint (RFC 7591 dynamic client registration on the Supabase tenant).
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    content_type: application/json
+    file: dokki-one-oauth-protected-resource.json
+    standard: RFC 9728
+    note: resource https://dokki.one/api/mcp; authorization_servers [https://dokki.one]; bearer_methods_supported [header]; scopes_supported [openid, email, profile]; resource_documentation https://dokki.one/pub/docs.
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+    note: A2A canonical path. See a2a note in apis.yml x-notes — the only card for a Dokki agent lives on the third-party registry openagora.cc, not on a Dokki host.
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/jwks.json
+    status: 404
+    note: The JWKS advertised by the discovery documents is on the Supabase tenant (200, one ES256 P-256 key), not on dokki.one.
+  - path: /llms.txt
+    status: 200
+    content_type: text/plain; charset=utf-8
+    file: ../llms/dokki-one-llms.txt
+    note: Not a /.well-known path; recorded here because it is the only other machine-readable discovery document on the host. /llms-full.txt 307s to the login page.
+- host: www.dokki.one
+  role: Redirect host
+  documents:
+  - path: /
+    status: 308
+    note: Permanent redirect to https://dokki.one/; no documents of its own.
+- host: api.dokki.one
+  role: Resolves (Vercel wildcard) but serves nothing
+  documents:
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+- host: mcp.dokki.one
+  role: Resolves (Vercel wildcard) but serves nothing — the MCP server is on dokki.one
+  documents:
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+- host: docs.dokki.one
+  role: Resolves but serves nothing — docs are at dokki.one/pub/docs
+  documents:
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+- host: app.dokki.one
+  role: Resolves but serves nothing — the app is at dokki.one/workspace
+  documents:
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+- host: status.dokki.one
+  role: Resolves but serves nothing — no status page exists
+  documents:
+  - path: /
+    status: 404
+third_party_hosts_named_by_discovery:
+- host: schcrwqbgkcmhdltwgcz.supabase.co
+  role: Supabase Auth tenant named as authorization_endpoint, userinfo_endpoint, jwks_uri and registration_endpoint
+  documents:
+  - path: /auth/v1/.well-known/jwks.json
+    status: 200
+    note: One ES256 (P-256) signing key, kid 3a827ab5-4ae8-411f-8650-9932025c0662. Not saved — it is Supabase's document, not Dokki's.
+  - path: /auth/v1/.well-known/openid-configuration
+    status: 200
+    note: Issuer https://schcrwqbgkcmhdltwgcz.supabase.co/auth/v1 (the tenant's own issuer; Dokki republishes the same endpoints under issuer https://dokki.one with its own token endpoint).
