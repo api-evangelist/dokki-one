@@ -1,0 +1,3254 @@
+openapi: 3.2.0
+info:
+  title: Dokki Agents API
+  version: v1
+  summary: 'The programmatic interface to Dokki workspaces: documents, tables, artifacts, files, search, agents, automations, organizations, publishing and account endpoints under https://dokki.one/api/v1.'
+  description: Dokki (UEVNS PTE.
+  contact:
+    name: Dokki support
+    email: support@dokki.one
+    url: https://dokki.one/pub/docs/faq
+  termsOfService: https://dokki.one/terms
+  x-generated-from: documentation
+  x-generated-by: API Evangelist enrichment pipeline
+  x-generated: '2026-09-19'
+  x-source: https://dokki.one/pub/api
+  x-provider: dokki-one
+servers:
+- url: https://dokki.one/api/v1
+  description: Production. "All public endpoints use https://dokki.one/api/v1" (https://dokki.one/pub/api/api-conventions); the reference pages state Base URL https://dokki.one with every path prefixed /api/v1, which this document folds into the server URL.
+security:
+- BearerAuth: []
+tags:
+- name: Agents
+  description: Agents, runs, approvals, schedules, memories, automations and work items.
+paths:
+  /agent-approvals:
+    get:
+      operationId: listAgentApprovals
+      summary: Get agent approvals
+      tags:
+      - Agents
+      description: 'Get agent approvals. Documented at https://dokki.one/pub/api/get-agent-approvals-1 (required scope: agent_approval:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-agent-approvals-1
+      x-required-scope: agent_approval:read
+      x-route-source: app/api/v1/agent-approvals/route.ts
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Number of items, bounded by the server. The reference states "most list endpoints accept limit/offset"; verify against GET /api/v1/capabilities.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset. See limit.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /agent-approvals/{approval_id}:
+    get:
+      operationId: getAgentApproval
+      summary: Get agent approvals
+      tags:
+      - Agents
+      description: 'Get agent approvals. Documented at https://dokki.one/pub/api/get-agent-approvals (required scope: agent_approval:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-agent-approvals
+      x-required-scope: agent_approval:read
+      x-route-source: app/api/v1/agent-approvals/[approvalId]/route.ts
+      parameters:
+      - name: approval_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    patch:
+      operationId: updateAgentApproval
+      summary: Update agent approvals
+      tags:
+      - Agents
+      description: 'Update agent approvals. Documented at https://dokki.one/pub/api/update-agent-approvals (required scope: agent_approval:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/update-agent-approvals
+      x-required-scope: agent_approval:write
+      x-route-source: app/api/v1/agent-approvals/[approvalId]/route.ts
+      parameters:
+      - name: approval_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /agent-runs:
+    post:
+      operationId: createAgentRun
+      summary: Create agent runs
+      tags:
+      - Agents
+      description: 'Create agent runs. Documented at https://dokki.one/pub/api/create-agent-runs (required scope: agent_run:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/create-agent-runs
+      x-required-scope: agent_run:write
+      x-route-source: app/api/v1/agent-runs/route.ts
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: listAgentRuns
+      summary: Get agent runs
+      tags:
+      - Agents
+      description: 'Get agent runs. Documented at https://dokki.one/pub/api/get-agent-runs (required scope: agent_run:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-agent-runs
+      x-required-scope: agent_run:read
+      x-route-source: app/api/v1/agent-runs/route.ts
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Number of items, bounded by the server. The reference states "most list endpoints accept limit/offset"; verify against GET /api/v1/capabilities.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset. See limit.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /agent-runs/{run_id}:
+    get:
+      operationId: getAgentRun
+      summary: Get agent runs
+      tags:
+      - Agents
+      description: 'Get agent runs. Documented at https://dokki.one/pub/api/get-agent-runs-1 (required scope: agent_run:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-agent-runs-1
+      x-required-scope: agent_run:read
+      x-route-source: app/api/v1/agent-runs/[runId]/route.ts
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /agent-runs/{run_id}/cancel:
+    post:
+      operationId: cancelAgentRun
+      summary: Cancel run
+      tags:
+      - Agents
+      description: 'Cancel run. Documented at https://dokki.one/pub/api/cancel-run (required scope: agent_run:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/cancel-run
+      x-required-scope: agent_run:write
+      x-route-source: app/api/v1/agent-runs/[runId]/cancel/route.ts
+      parameters:
+      - name: run_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /agent-schedules:
+    post:
+      operationId: createAgentSchedule
+      summary: Create agent schedules
+      tags:
+      - Agents
+      description: 'Create agent schedules. Documented at https://dokki.one/pub/api/create-agent-schedules (required scope: agent_schedule:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/create-agent-schedules
+      x-required-scope: agent_schedule:write
+      x-route-source: app/api/v1/agent-schedules/route.ts
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: listAgentSchedules
+      summary: Get agent schedules
+      tags:
+      - Agents
+      description: 'Get agent schedules. Documented at https://dokki.one/pub/api/get-agent-schedules (required scope: agent_schedule:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-agent-schedules
+      x-required-scope: agent_schedule:read
+      x-route-source: app/api/v1/agent-schedules/route.ts
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Number of items, bounded by the server. The reference states "most list endpoints accept limit/offset"; verify against GET /api/v1/capabilities.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset. See limit.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /agent-schedules/{schedule_id}:
+    delete:
+      operationId: deleteAgentSchedule
+      summary: Delete agent schedules
+      tags:
+      - Agents
+      description: 'Delete agent schedules. Documented at https://dokki.one/pub/api/delete-agent-schedules (required scope: agent_schedule:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/delete-agent-schedules
+      x-required-scope: agent_schedule:write
+      x-route-source: app/api/v1/agent-schedules/[scheduleId]/route.ts
+      parameters:
+      - name: schedule_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: getAgentSchedule
+      summary: Get agent schedules
+      tags:
+      - Agents
+      description: 'Get agent schedules. Documented at https://dokki.one/pub/api/get-agent-schedules-1 (required scope: agent_schedule:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-agent-schedules-1
+      x-required-scope: agent_schedule:read
+      x-route-source: app/api/v1/agent-schedules/[scheduleId]/route.ts
+      parameters:
+      - name: schedule_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    patch:
+      operationId: updateAgentSchedule
+      summary: Update agent schedules
+      tags:
+      - Agents
+      description: 'Update agent schedules. Documented at https://dokki.one/pub/api/update-agent-schedules (required scope: agent_schedule:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/update-agent-schedules
+      x-required-scope: agent_schedule:write
+      x-route-source: app/api/v1/agent-schedules/[scheduleId]/route.ts
+      parameters:
+      - name: schedule_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /agents:
+    post:
+      operationId: createAgent
+      summary: Create agents
+      tags:
+      - Agents
+      description: 'Create agents. Documented at https://dokki.one/pub/api/create-agents (required scope: agent:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/create-agents
+      x-required-scope: agent:write
+      x-route-source: app/api/v1/agents/route.ts
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: listAgents
+      summary: Get agents
+      tags:
+      - Agents
+      description: 'Get agents. Documented at https://dokki.one/pub/api/get-agents (required scope: agent:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-agents
+      x-required-scope: agent:read
+      x-route-source: app/api/v1/agents/route.ts
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Number of items, bounded by the server. The reference states "most list endpoints accept limit/offset"; verify against GET /api/v1/capabilities.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset. See limit.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /agents/{agent_id}:
+    delete:
+      operationId: deleteAgent
+      summary: Delete agents
+      tags:
+      - Agents
+      description: 'Delete agents. Documented at https://dokki.one/pub/api/delete-agents (required scope: agent:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/delete-agents
+      x-required-scope: agent:write
+      x-route-source: app/api/v1/agents/[agentId]/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: getAgent
+      summary: Get agents
+      tags:
+      - Agents
+      description: 'Get agents. Documented at https://dokki.one/pub/api/get-agents-1 (required scope: agent:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-agents-1
+      x-required-scope: agent:read
+      x-route-source: app/api/v1/agents/[agentId]/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    patch:
+      operationId: updateAgent
+      summary: Update agents
+      tags:
+      - Agents
+      description: 'Update agents. Documented at https://dokki.one/pub/api/update-agents (required scope: agent:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/update-agents
+      x-required-scope: agent:write
+      x-route-source: app/api/v1/agents/[agentId]/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /agents/{agent_id}/mcp:
+    post:
+      operationId: createAgentMcp
+      summary: Create mcp
+      tags:
+      - Agents
+      description: 'Create mcp. Documented at https://dokki.one/pub/api/create-mcp (required scope: agent:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/create-mcp
+      x-required-scope: agent:write
+      x-route-source: app/api/v1/agents/[agentId]/mcp/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    delete:
+      operationId: deleteAgentMcp
+      summary: Delete mcp
+      tags:
+      - Agents
+      description: 'Delete mcp. Documented at https://dokki.one/pub/api/delete-mcp (required scope: agent:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/delete-mcp
+      x-required-scope: agent:write
+      x-route-source: app/api/v1/agents/[agentId]/mcp/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: listAgentMcp
+      summary: Get mcp
+      tags:
+      - Agents
+      description: 'Get mcp. Documented at https://dokki.one/pub/api/get-mcp (required scope: agent:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-mcp
+      x-required-scope: agent:read
+      x-route-source: app/api/v1/agents/[agentId]/mcp/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Number of items, bounded by the server. The reference states "most list endpoints accept limit/offset"; verify against GET /api/v1/capabilities.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset. See limit.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    patch:
+      operationId: updateAgentMcp
+      summary: Update mcp
+      tags:
+      - Agents
+      description: 'Update mcp. Documented at https://dokki.one/pub/api/update-mcp (required scope: agent:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/update-mcp
+      x-required-scope: agent:write
+      x-route-source: app/api/v1/agents/[agentId]/mcp/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /agents/{agent_id}/memories:
+    post:
+      operationId: createAgentMemory
+      summary: Create memories
+      tags:
+      - Agents
+      description: 'Create memories. Documented at https://dokki.one/pub/api/create-memories (required scope: agent:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/create-memories
+      x-required-scope: agent:write
+      x-route-source: app/api/v1/agents/[agentId]/memories/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    delete:
+      operationId: deleteAgentMemories
+      summary: Delete memories
+      tags:
+      - Agents
+      description: 'Delete memories. Documented at https://dokki.one/pub/api/delete-memories (required scope: agent:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/delete-memories
+      x-required-scope: agent:write
+      x-route-source: app/api/v1/agents/[agentId]/memories/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: listAgentMemories
+      summary: Get memories
+      tags:
+      - Agents
+      description: 'Get memories. Documented at https://dokki.one/pub/api/get-memories (required scope: agent:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-memories
+      x-required-scope: agent:read
+      x-route-source: app/api/v1/agents/[agentId]/memories/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Number of items, bounded by the server. The reference states "most list endpoints accept limit/offset"; verify against GET /api/v1/capabilities.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset. See limit.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /agents/{agent_id}/pins:
+    post:
+      operationId: addAgentPin
+      summary: Add pin
+      tags:
+      - Agents
+      description: 'Add pin. Documented at https://dokki.one/pub/api/add-pin (required scope: agent:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/add-pin
+      x-required-scope: agent:write
+      x-route-source: app/api/v1/agents/[agentId]/pins/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: listAgentPins
+      summary: List pins
+      tags:
+      - Agents
+      description: 'List pins. Documented at https://dokki.one/pub/api/list-pins (required scope: agent:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/list-pins
+      x-required-scope: agent:read
+      x-route-source: app/api/v1/agents/[agentId]/pins/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Number of items, bounded by the server. The reference states "most list endpoints accept limit/offset"; verify against GET /api/v1/capabilities.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset. See limit.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    delete:
+      operationId: removeAgentPins
+      summary: Remove pin
+      tags:
+      - Agents
+      description: 'Remove pin. Documented at https://dokki.one/pub/api/remove-pin (required scope: agent:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/remove-pin
+      x-required-scope: agent:write
+      x-route-source: app/api/v1/agents/[agentId]/pins/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    patch:
+      operationId: updateAgentPins
+      summary: Update pin
+      tags:
+      - Agents
+      description: 'Update pin. Documented at https://dokki.one/pub/api/update-pin (required scope: agent:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/update-pin
+      x-required-scope: agent:write
+      x-route-source: app/api/v1/agents/[agentId]/pins/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /agents/{agent_id}/skills:
+    get:
+      operationId: listAgentSkills
+      summary: Get skills
+      tags:
+      - Agents
+      description: 'Get skills. Documented at https://dokki.one/pub/api/get-skills (required scope: agent:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-skills
+      x-required-scope: agent:read
+      x-route-source: app/api/v1/agents/[agentId]/skills/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Number of items, bounded by the server. The reference states "most list endpoints accept limit/offset"; verify against GET /api/v1/capabilities.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset. See limit.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    put:
+      operationId: replaceAgentSkills
+      summary: Replace skills
+      tags:
+      - Agents
+      description: 'Replace skills. Documented at https://dokki.one/pub/api/replace-skills (required scope: agent:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/replace-skills
+      x-required-scope: agent:write
+      x-route-source: app/api/v1/agents/[agentId]/skills/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /agents/{agent_id}/workspaces:
+    put:
+      operationId: replaceAgentWorkspaces
+      summary: Replace workspaces
+      tags:
+      - Agents
+      description: 'Replace workspaces. Documented at https://dokki.one/pub/api/replace-workspaces (required scope: agent:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/replace-workspaces
+      x-required-scope: agent:write
+      x-route-source: app/api/v1/agents/[agentId]/workspaces/route.ts
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /automations:
+    post:
+      operationId: createAutomation
+      summary: Create automations
+      tags:
+      - Agents
+      description: 'Create automations. Documented at https://dokki.one/pub/api/create-automations (required scope: automation:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/create-automations
+      x-required-scope: automation:write
+      x-route-source: app/api/v1/automations/route.ts
+      parameters:
+      - name: workspace_id
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: 'Documented in the Automations and Schedules guide: GET /api/v1/automations?workspace_id=...'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: listAutomations
+      summary: Get automations
+      tags:
+      - Agents
+      description: 'Get automations. Documented at https://dokki.one/pub/api/get-automations (required scope: automation:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-automations
+      x-required-scope: automation:read
+      x-route-source: app/api/v1/automations/route.ts
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Number of items, bounded by the server. The reference states "most list endpoints accept limit/offset"; verify against GET /api/v1/capabilities.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset. See limit.
+      - name: workspace_id
+        in: query
+        required: false
+        schema:
+          type: string
+          format: uuid
+        description: 'Documented in the Automations and Schedules guide: GET /api/v1/automations?workspace_id=...'
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /automations/{automation_id}:
+    delete:
+      operationId: deleteAutomation
+      summary: Delete automations
+      tags:
+      - Agents
+      description: 'Delete automations. Documented at https://dokki.one/pub/api/delete-automations (required scope: automation:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/delete-automations
+      x-required-scope: automation:write
+      x-route-source: app/api/v1/automations/[automationId]/route.ts
+      parameters:
+      - name: automation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: getAutomation
+      summary: Get automations
+      tags:
+      - Agents
+      description: 'Get automations. Documented at https://dokki.one/pub/api/get-automations-1 (required scope: automation:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-automations-1
+      x-required-scope: automation:read
+      x-route-source: app/api/v1/automations/[automationId]/route.ts
+      parameters:
+      - name: automation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    patch:
+      operationId: updateAutomation
+      summary: Update automations
+      tags:
+      - Agents
+      description: 'Update automations. Documented at https://dokki.one/pub/api/update-automations (required scope: automation:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/update-automations
+      x-required-scope: automation:write
+      x-route-source: app/api/v1/automations/[automationId]/route.ts
+      parameters:
+      - name: automation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /automations/{automation_id}/run:
+    post:
+      operationId: runAutomation
+      summary: Run automation
+      tags:
+      - Agents
+      description: 'Run automation. Documented at https://dokki.one/pub/api/run-automation (required scope: automation:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/run-automation
+      x-required-scope: automation:write
+      x-route-source: app/api/v1/automations/[automationId]/run/route.ts
+      parameters:
+      - name: automation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /automations/{automation_id}/runs:
+    get:
+      operationId: listAutomationRuns
+      summary: List runs
+      tags:
+      - Agents
+      description: 'List runs. Documented at https://dokki.one/pub/api/list-runs (required scope: automation:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/list-runs
+      x-required-scope: automation:read
+      x-route-source: app/api/v1/automations/[automationId]/runs/route.ts
+      parameters:
+      - name: automation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Number of items, bounded by the server. The reference states "most list endpoints accept limit/offset"; verify against GET /api/v1/capabilities.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset. See limit.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /memories:
+    post:
+      operationId: createMemory
+      summary: Create memories
+      tags:
+      - Agents
+      description: 'Create memories. Documented at https://dokki.one/pub/api/create-memories-1 (required scope: memory:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/create-memories-1
+      x-required-scope: memory:write
+      x-route-source: app/api/v1/memories/route.ts
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: listMemories
+      summary: Get memories
+      tags:
+      - Agents
+      description: 'Get memories. Documented at https://dokki.one/pub/api/get-memories-1 (required scope: memory:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-memories-1
+      x-required-scope: memory:read
+      x-route-source: app/api/v1/memories/route.ts
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Number of items, bounded by the server. The reference states "most list endpoints accept limit/offset"; verify against GET /api/v1/capabilities.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset. See limit.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /memories/{memory_id}:
+    delete:
+      operationId: deleteMemory
+      summary: Delete memories
+      tags:
+      - Agents
+      description: 'Delete memories. Documented at https://dokki.one/pub/api/delete-memories-1 (required scope: memory:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/delete-memories-1
+      x-required-scope: memory:write
+      x-route-source: app/api/v1/memories/[memoryId]/route.ts
+      parameters:
+      - name: memory_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: getMemory
+      summary: Get memories
+      tags:
+      - Agents
+      description: 'Get memories. Documented at https://dokki.one/pub/api/get-memories-2 (required scope: memory:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-memories-2
+      x-required-scope: memory:read
+      x-route-source: app/api/v1/memories/[memoryId]/route.ts
+      parameters:
+      - name: memory_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    patch:
+      operationId: updateMemory
+      summary: Update memories
+      tags:
+      - Agents
+      description: 'Update memories. Documented at https://dokki.one/pub/api/update-memories (required scope: memory:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/update-memories
+      x-required-scope: memory:write
+      x-route-source: app/api/v1/memories/[memoryId]/route.ts
+      parameters:
+      - name: memory_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /work-items:
+    post:
+      operationId: createWorkItem
+      summary: Create work items
+      tags:
+      - Agents
+      description: 'Create work items. Documented at https://dokki.one/pub/api/create-work-items (required scope: work_item:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/create-work-items
+      x-required-scope: work_item:write
+      x-route-source: app/api/v1/work-items/route.ts
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: listWorkItems
+      summary: Get work items
+      tags:
+      - Agents
+      description: 'Get work items. Documented at https://dokki.one/pub/api/get-work-items (required scope: work_item:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-work-items
+      x-required-scope: work_item:read
+      x-route-source: app/api/v1/work-items/route.ts
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Number of items, bounded by the server. The reference states "most list endpoints accept limit/offset"; verify against GET /api/v1/capabilities.
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+        description: Zero-based offset. See limit.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /work-items/{work_item_id}:
+    delete:
+      operationId: deleteWorkItem
+      summary: Delete work items
+      tags:
+      - Agents
+      description: 'Delete work items. Documented at https://dokki.one/pub/api/delete-work-items (required scope: work_item:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/delete-work-items
+      x-required-scope: work_item:write
+      x-route-source: app/api/v1/work-items/[workItemId]/route.ts
+      parameters:
+      - name: work_item_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: getWorkItem
+      summary: Get work items
+      tags:
+      - Agents
+      description: 'Get work items. Documented at https://dokki.one/pub/api/get-work-items-1 (required scope: work_item:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-work-items-1
+      x-required-scope: work_item:read
+      x-route-source: app/api/v1/work-items/[workItemId]/route.ts
+      parameters:
+      - name: work_item_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    patch:
+      operationId: updateWorkItem
+      summary: Update work items
+      tags:
+      - Agents
+      description: 'Update work items. Documented at https://dokki.one/pub/api/update-work-items (required scope: work_item:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/update-work-items
+      x-required-scope: work_item:write
+      x-route-source: app/api/v1/work-items/[workItemId]/route.ts
+      parameters:
+      - name: work_item_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+components:
+  schemas:
+    SuccessEnvelope:
+      type: object
+      description: 'Documented success shape: "Successful responses are JSON. Preserve request_id values and treat resource identifiers as opaque UUIDs."'
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+        request_id:
+          type: string
+          description: Request identifier (req_...). Log it and quote it in support tickets.
+    ErrorEnvelope:
+      type: object
+      description: Errors use one stable shape (https://dokki.one/pub/api/pagination-errors-and-rate-limits).
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+              description: Stable machine code, e.g. unauthorized, insufficient_scope, forbidden.
+              examples:
+              - unauthorized
+              - insufficient_scope
+              - forbidden
+            message:
+              type: string
+            request_id:
+              type: string
+              format: uuid
+      examples:
+      - error:
+          code: forbidden
+          message: Resource access denied
+          request_id: uuid
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Authorization: Bearer <credential>. Accepted credentials per https://dokki.one/pub/api/authentication: a Dokki API key (prefix dk_, tenant-bound to Personal or one Org, carrying the x-required-scope of each operation), a Supabase bearer access token, or a browser session. Scopes are API-key scopes, not OAuth scopes; see scopes/dokki-one-scopes.yml.'
+externalDocs:
+  description: Dokki API documentation
+  url: https://dokki.one/pub/api

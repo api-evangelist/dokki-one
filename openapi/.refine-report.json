@@ -1,0 +1,26 @@
+{
+  "provider": "dokki-one",
+  "sources": [
+    "dokki-one-openapi.yml"
+  ],
+  "outputs": [
+    "dokki-one-account-api-openapi.yml",
+    "dokki-one-agents-api-openapi.yml",
+    "dokki-one-collaboration-api-openapi.yml",
+    "dokki-one-core-api-openapi.yml",
+    "dokki-one-organizations-api-openapi.yml",
+    "dokki-one-publishing-api-openapi.yml",
+    "dokki-one-resources-api-openapi.yml",
+    "dokki-one-search-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/dokki-one-openapi.yml"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "dokki-one-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: written (+8 apis, 9 total)"
+  ],
+  "skipped": []
+}

@@ -1,0 +1,466 @@
+openapi: 3.2.0
+info:
+  title: Dokki Publishing API
+  version: v1
+  summary: 'The programmatic interface to Dokki workspaces: documents, tables, artifacts, files, search, agents, automations, organizations, publishing and account endpoints under https://dokki.one/api/v1.'
+  description: Dokki (UEVNS PTE.
+  contact:
+    name: Dokki support
+    email: support@dokki.one
+    url: https://dokki.one/pub/docs/faq
+  termsOfService: https://dokki.one/terms
+  x-generated-from: documentation
+  x-generated-by: API Evangelist enrichment pipeline
+  x-generated: '2026-09-19'
+  x-source: https://dokki.one/pub/api
+  x-provider: dokki-one
+servers:
+- url: https://dokki.one/api/v1
+  description: Production. "All public endpoints use https://dokki.one/api/v1" (https://dokki.one/pub/api/api-conventions); the reference pages state Base URL https://dokki.one with every path prefixed /api/v1, which this document folds into the server URL.
+security:
+- BearerAuth: []
+tags:
+- name: Publishing
+  description: Publishing workspaces and resources to public sites.
+paths:
+  /resources/{resource_id}/publish:
+    post:
+      operationId: publishResource
+      summary: Create publication
+      tags:
+      - Publishing
+      description: 'Create publication. Documented at https://dokki.one/pub/api/create-publication-1 (required scope: publish:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/create-publication-1
+      x-required-scope: publish:write
+      x-route-source: app/api/v1/resources/[resourceId]/publish/route.ts
+      parameters:
+      - name: resource_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    delete:
+      operationId: unpublishResource
+      summary: Delete publication
+      tags:
+      - Publishing
+      description: 'Delete publication. Documented at https://dokki.one/pub/api/delete-publication (required scope: publish:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/delete-publication
+      x-required-scope: publish:write
+      x-route-source: app/api/v1/resources/[resourceId]/publish/route.ts
+      parameters:
+      - name: resource_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: getResourcePublish
+      summary: Get publish status
+      tags:
+      - Publishing
+      description: 'Get publish status. Documented at https://dokki.one/pub/api/get-publish-status-1 (required scope: publish:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-publish-status-1
+      x-required-scope: publish:read
+      x-route-source: app/api/v1/resources/[resourceId]/publish/route.ts
+      parameters:
+      - name: resource_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /workspaces/{workspace_id}/publish:
+    post:
+      operationId: publishWorkspace
+      summary: Create publication
+      tags:
+      - Publishing
+      description: 'Create publication. Documented at https://dokki.one/pub/api/create-publication (required scope: publish:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/create-publication
+      x-required-scope: publish:write
+      x-route-source: app/api/v1/workspaces/[workspaceId]/publish/route.ts
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    get:
+      operationId: getWorkspacePublish
+      summary: Get publish status
+      tags:
+      - Publishing
+      description: 'Get publish status. Documented at https://dokki.one/pub/api/get-publish-status (required scope: publish:read).'
+      externalDocs:
+        url: https://dokki.one/pub/api/get-publish-status
+      x-required-scope: publish:read
+      x-route-source: app/api/v1/workspaces/[workspaceId]/publish/route.ts
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+    patch:
+      operationId: updateWorkspacePublish
+      summary: Update publication
+      tags:
+      - Publishing
+      description: 'Update publication. Documented at https://dokki.one/pub/api/update-publication (required scope: publish:write).'
+      externalDocs:
+        url: https://dokki.one/pub/api/update-publication
+      x-required-scope: publish:write
+      x-route-source: app/api/v1/workspaces/[workspaceId]/publish/route.ts
+      parameters:
+      - name: workspace_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Path identifier.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              description: The published reference does not enumerate this body's fields ("Send a JSON request body with only supported fields"); discover them from GET /api/v1/capabilities and the live contract.
+      responses:
+        '200':
+          description: Successful response. JSON; preserve request_id values and treat resource identifiers as opaque UUIDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '401':
+          description: Missing or invalid authentication (error.code unauthorized)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '403':
+          description: Insufficient scope or tenant access (error.code insufficient_scope or forbidden)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '404':
+          description: Resource not found (also returned when revealing existence would leak information)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '409':
+          description: Conflicting state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+components:
+  schemas:
+    SuccessEnvelope:
+      type: object
+      description: 'Documented success shape: "Successful responses are JSON. Preserve request_id values and treat resource identifiers as opaque UUIDs."'
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+        request_id:
+          type: string
+          description: Request identifier (req_...). Log it and quote it in support tickets.
+    ErrorEnvelope:
+      type: object
+      description: Errors use one stable shape (https://dokki.one/pub/api/pagination-errors-and-rate-limits).
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+              description: Stable machine code, e.g. unauthorized, insufficient_scope, forbidden.
+              examples:
+              - unauthorized
+              - insufficient_scope
+              - forbidden
+            message:
+              type: string
+            request_id:
+              type: string
+              format: uuid
+      examples:
+      - error:
+          code: forbidden
+          message: Resource access denied
+          request_id: uuid
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Authorization: Bearer <credential>. Accepted credentials per https://dokki.one/pub/api/authentication: a Dokki API key (prefix dk_, tenant-bound to Personal or one Org, carrying the x-required-scope of each operation), a Supabase bearer access token, or a browser session. Scopes are API-key scopes, not OAuth scopes; see scopes/dokki-one-scopes.yml.'
+externalDocs:
+  description: Dokki API documentation
+  url: https://dokki.one/pub/api
