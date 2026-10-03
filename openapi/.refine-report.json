@@ -1,7 +1,7 @@
 {
   "provider": "dokki-one",
   "sources": [
-    "dokki-one-openapi.yml"
+    "_original/dokki-one-openapi.yml"
   ],
   "outputs": [
     "dokki-one-account-api-openapi.yml",
@@ -13,14 +13,22 @@
     "dokki-one-resources-api-openapi.yml",
     "dokki-one-search-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/dokki-one-openapi.yml"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "dokki-one-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "apis.yml register: written (+8 apis, 9 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "dokki-one-account-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "dokki-one-agents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "dokki-one-collaboration-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "dokki-one-core-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "dokki-one-organizations-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "dokki-one-publishing-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "dokki-one-resources-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "dokki-one-search-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
