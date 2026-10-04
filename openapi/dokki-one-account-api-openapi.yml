@@ -329,16 +329,6 @@ paths:
                 $ref: '#/components/schemas/ErrorEnvelope'
 components:
   schemas:
-    SuccessEnvelope:
-      type: object
-      description: 'Documented success shape: "Successful responses are JSON. Preserve request_id values and treat resource identifiers as opaque UUIDs."'
-      properties:
-        data:
-          type: object
-          additionalProperties: true
-        request_id:
-          type: string
-          description: Request identifier (req_...). Log it and quote it in support tickets.
     ErrorEnvelope:
       type: object
       description: Errors use one stable shape (https://dokki.one/pub/api/pagination-errors-and-rate-limits).
@@ -368,6 +358,16 @@ components:
           code: forbidden
           message: Resource access denied
           request_id: uuid
+    SuccessEnvelope:
+      type: object
+      description: 'Documented success shape: "Successful responses are JSON. Preserve request_id values and treat resource identifiers as opaque UUIDs."'
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+        request_id:
+          type: string
+          description: Request identifier (req_...). Log it and quote it in support tickets.
   securitySchemes:
     BearerAuth:
       type: http
