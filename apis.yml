@@ -223,6 +223,8 @@ apis:
   humanURL: https://dokki.one/pub/api
   baseURL: https://dokki.one/api/v1
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
