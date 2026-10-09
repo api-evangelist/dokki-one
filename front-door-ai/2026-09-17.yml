@@ -1,0 +1,32 @@
+# Front Door AI Index — dokki-one — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: dokki-one
+  lexicon_version: '1.0'
+  probed_at: '2026-09-25'
+  host: dokki.one
+  final_host: dokki.one
+  ownership: own
+  owner: dokki-one
+  shares_host_with: null
+  inherited_from: null
+  alias_of: null
+  verdict: scored
+  score: 18
+  band: 5
+  band_label: prominent
+  host_score: 18
+  density: 21.74
+  words: 828
+  tiers:
+    agentic: 9
+    core: 8
+    model: 1
+  ambiguous: 52
+  top_terms:
+    agent: 52
+    AI: 8
+    MCP: 5
+    AI agent: 4
+    Claude: 1

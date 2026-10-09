@@ -78,3 +78,44 @@ add_ons:
 - {name: Credits, price: pay-as-you-go, description: AI usage past the plan quota; recharge amounts shown at purchase time.}
 - {name: Additional Workspaces, price: 2, currency: USD, billing_period: 'workspace / month', description: Extra workspaces beyond Pro's 20-workspace cap.}
 trial: Every new account gets a 14-day Pro trial; no credit card to start; cancel anytime.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  units:
+  - message
+  - object
+  plans:
+  - name: Free
+    access: other
+    model: free
+    model_how: derived
+    units:
+    - message
+    - object
+    periods:
+    - day
+    - other
+  - name: Pro
+    access: other
+    model: free
+    model_how: derived
+    units:
+    - object
+    periods:
+    - other
+  - name: Max
+    access: other
+    model: free
+    model_how: derived
+    units:
+    - object
+    periods:
+    - other
+  - name: Enterprise
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
