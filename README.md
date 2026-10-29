@@ -64,8 +64,133 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Dokki (UEVNS PTE. LTD., Singapore) is an agent-native collaboration workspace where people and AI agents share the same documents, tables, artifacts, chat and permissions. This profile covers its REST API (https://dokki.one/api/v1, documented at https://dokki.one/pub/api), its hosted MCP servers (https://dokki.one/mcp/v2 facade and legacy /api/mcp), the OAuth/OIDC discovery documents it serves, its provider-published Agent Skills, llms.txt, plans, and the runtime conventions an integrator or agent needs. It was first staged as "Brad" from an a2aregistry.org listing; the company is Dokki.
-- https://dokki.one/
-- https://dokki.one/pub/api
-- https://dokki.one/pub/docs
-- https://github.com/Dokki-lab
+Dokki (UEVNS PTE. LTD., Singapore) is an agent-native collaboration workspace where people and AI agents share the same documents, tables, artifacts, chat and permissions. It exposes a 158-operation REST API under https://dokki.one/api/v1 (documented across ~200 public reference pages, no OpenAPI published — the one in this repo is generated from that reference), hosted remote MCP servers — the /mcp/v2 facade of eight action-routed tools plus preview_resource, and a legacy flat /api/mcp server — with OAuth 2.0 / OIDC discovery (RFC 8414, RFC 9728, dynamic client registration) served from its own .well-known, ten provider-published Agent Skills across Claude Code and Codex plugins, a public llms.txt, and a macOS desktop app. Formerly stubbed as "Brad" from an a2aregistry.org listing whose card is hosted on the third-party registry openagora.cc, not on a Dokki host.
+
+**Areas:** Collaboration · Knowledge Management · Documents · Agents · MCP · Artificial Intelligence · Productivity · Workspace · Publishing · Search · Singapore
+
+## Dokki on APIs.io
+
+Everything profiled for Dokki is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/dokki-one/](https://apis.io/providers/dokki-one/)** — or go straight to one of the APIs or properties below.
+
+### APIs (9)
+
+- [Dokki MCP Server](https://apis.io/apis/dokki-one/dokki-mcp-server/) — Hosted remote MCP over stateless Streamable HTTP. The canonical /mcp/v2 facade exposes eight action-routed tools — find, read, create, edit, share, message,…
+- [Dokki Account API](https://apis.io/apis/dokki-one/dokki-one-account-api/) — Usage, credits, storage and model availability.
+- [Dokki Agents API](https://apis.io/apis/dokki-one/dokki-one-agents-api/) — Agents, runs, approvals, schedules, memories, automations and work items.
+- [Dokki Collaboration API](https://apis.io/apis/dokki-one/dokki-one-collaboration-api/) — Members, comments, permissions, access requests, pins, IM conversations and chat sessions.
+- [Dokki Core API](https://apis.io/apis/dokki-one/dokki-one-core-api/) — Identity, capability discovery, API keys, notifications and workspace templates.
+- [Dokki Organizations API](https://apis.io/apis/dokki-one/dokki-one-organizations-api/) — Organizations and org membership.
+- [Dokki Publishing API](https://apis.io/apis/dokki-one/dokki-one-publishing-api/) — Publishing workspaces and resources to public sites.
+- [Dokki Resources API](https://apis.io/apis/dokki-one/dokki-one-resources-api/) — Workspaces and the resource tree: documents, tables, artifacts, folders, files, content, snapshots, tags, trash, imports, connectors and forms.
+- [Dokki Search API](https://apis.io/apis/dokki-one/dokki-one-search-api/) — Keyword, semantic and hybrid search.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [dokki-one-mcp.yml](https://apis.io/servers/dokki-one/dokki-one-mcp-yml/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Dokki One Openapi Overlay](https://apis.io/overlays/dokki-one/dokki-one-openapi-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Dokki One Authentication](https://apis.io/security/dokki-one/dokki-one-authentication/)
+- [Dokki One Domain Security](https://apis.io/security/dokki-one/dokki-one-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Dokki One Scopes](https://apis.io/scopes/dokki-one/dokki-one-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Dokki One Plans Pricing](https://apis.io/plans/dokki-one/dokki-one-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Dokki One Rate Limits](https://apis.io/rate-limits/dokki-one/dokki-one-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://dokki.one/)
+- [Documentation](https://dokki.one/pub/docs)
+- [Getting started](https://dokki.one/pub/api/quickstart-first-request)
+- [API reference](https://dokki.one/pub/api/api-documentation-home)
+- [Pricing](https://dokki.one/plans)
+- [Sign up](https://dokki.one/auth/sign-up)
+- [Blog](https://dokki.one/pub/blog)
+- [Terms of service](https://dokki.one/terms)
+- [Privacy policy](https://dokki.one/privacy)
+- [GitHub](https://github.com/Dokki-lab)
+
+## API Evangelist rating
+
+**Kin Score 47.7** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 17.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 21.1 |
+| Developer ergonomics | 64.3 |
+| Access clarity | 76.3 |
+
+**Agent readiness 47.7** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | yes |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | — |
+
+**Regulatory alignment 39.1** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/dokki-one/](https://apis.io/providers/dokki-one/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Dokki: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/dokki-one/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
